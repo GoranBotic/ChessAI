@@ -1,13 +1,14 @@
 package chessai;
 
 
-public class bishop implements pieces {
+public class bishop extends pieces {
+    int value = 3;
     
-    public bishop() {
-        
+    public bishop(int x,int y) {
+        super(x,y);
     }
     
-    public void move() {
+    public void move(char[][] board,int x,int y) {
         
     }
     

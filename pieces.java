@@ -1,7 +1,16 @@
 package chessai;
 
-public interface pieces {
+public class pieces {
+    int x,y;
+    public pieces(int x,int y){
+        this.x = x;
+        this.y = y;
+    }
     
-    public void move();
+    public void move(char[][] board,int x,int y){
+        
+    }
+    
+
     
 }
