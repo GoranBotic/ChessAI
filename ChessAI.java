@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class ChessAI {
 
     char[][] board;
-    boolean turnState; //determines who's turn it is. 0: Human 1: AI
     ArrayList<pieces> HumanPieces = new ArrayList();
 
     public ChessAI() {
@@ -19,7 +18,7 @@ public class ChessAI {
 
         initBoard();
         pieces p = HumanPieces.get(0);
-        board = p.move(board, p.x, p.y);
+        p.move(board, p.x, p.y);
         System.out.println();
         updateBoard(board);
     }
@@ -43,7 +42,7 @@ public class ChessAI {
 
         for (int i = 0; i < board.length; i++) {
             board[1][i] = 'p';
-            pieces p = new pawn(1, i,1);
+            pieces p = new pawn(1, i);
         }
         for (int j = 0; j < board.length; j++) {
             board[2][j] = ' ';
@@ -52,33 +51,33 @@ public class ChessAI {
             board[5][j] = ' ';
         }
         board[7][0] = 'R';
-        pieces r1 = new rook(7, 0, -1);
-//        HumanPieces.add(r1);
+        pieces r1 = new rook(7, 0);
+        //HumanPieces.add(r1);
         board[7][1] = 'N';
-        pieces n1 = new knight(7, 0, -1);
+        pieces n1 = new knight(7, 0);
 //        HumanPieces.add(n1);
         board[7][2] = 'B';
-        pieces b1 = new bishop(7, 2, -1);
+        pieces b1 = new bishop(7, 2);
 //        HumanPieces.add(b1);
         board[7][3] = 'K';
-        pieces k = new king(7, 3,-1);
+        pieces k = new king(7, 3);
 //        HumanPieces.add(k);
         board[7][4] = 'Q';
-        pieces q = new queen(7, 4,-1);
+        pieces q = new queen(7, 4);
 //        HumanPieces.add(q);
         board[7][5] = 'B';
-        pieces b2 = new bishop(7, 5,-1);
+        pieces b2 = new bishop(7, 5);
 //        HumanPieces.add(b2);
         board[7][6] = 'N';
-        pieces n2 = new knight(7, 6,-1);
+        pieces n2 = new knight(7, 6);
 //        HumanPieces.add(n2);
         board[7][7] = 'R';
-        pieces r2 = new rook(7, 7,-1);
+        pieces r2 = new rook(7, 7);
 //        HumanPieces.add(r2);
 
         for (int i = 0; i < board.length; i++) {
             board[6][i] = 'P';
-            pieces p = new pawn(6, i,-1);
+            pieces p = new pawn(6, i);
             HumanPieces.add(p);
         }
 
