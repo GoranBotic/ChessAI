@@ -8,8 +8,8 @@ public class bishop extends pieces {
     int value = 3;
     Scanner kbd = new Scanner(System.in);
 
-    public bishop(int x, int y, int direction) {
-        super(x, y, direction);
+    public bishop(int x, int y, int direction, String name) {
+        super(x, y, direction, name);
     }
 
     public char[][] move(char[][] board, int x, int y) {
@@ -21,47 +21,81 @@ public class bishop extends pieces {
     public char[][] Available_Moves(char[][] board, ArrayList<char[][]> movesList) {
 
         ArrayList<char[][]> moveList = new ArrayList();
+        ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
+        
         int diagMove = 1;
         System.out.println("Selct an available move(s): ");
 
-        while (board[x + diagMove * direction][y + diagMove * direction] == ' ') {
-            System.out.println("(" + (moveList.size() + 1) + ") " + (x + (diagMove * direction)) + ":" + (y + (diagMove * direction))); //show user the available moves
-            char[][] aBoard = new char[board.length][board.length];
-            aBoard = copyBoard(board);
-            aBoard[x + diagMove * direction][y + diagMove * direction] = 'B';
-            aBoard[x][y] = ' ';
-            moveList.add(aBoard);
+        while (inBounds(x + diagMove * direction, y - diagMove)) {
+            if (board[x + diagMove * direction][y - diagMove] == ' ') {
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * direction) + ":" + (y - diagMove)); //show user the available moves
+                char[][] aBoard = new char[board.length][board.length];
+                aBoard = copyBoard(board);
+                aBoard[x + diagMove * direction][y - diagMove] = 'B';
+                aBoard[x][y] = ' ';
+                int[] XY = { x + diagMove * direction, y - diagMove};
+                updatedXY.add(XY);
+                moveList.add(aBoard);
+                diagMove++; //increment diagMove
+            } else {
+                break;
+            }
         }//Checks for Upper-Left
-
-        while (board[x + diagMove * direction][y - diagMove * direction] == ' ') {
-            System.out.println("(" + (moveList.size() + 1) + ") " + (x + (diagMove * direction)) + ":" + (y - (diagMove * direction))); //show user the available moves
-            char[][] aBoard = new char[board.length][board.length];
-            aBoard = copyBoard(board);
-            aBoard[x + diagMove * direction][y - diagMove * direction] = 'B';
-            aBoard[x][y] = ' ';
-            moveList.add(aBoard);
+        
+        diagMove = 1; //reset diagMove
+        
+        while (inBounds(x + diagMove * direction, y + diagMove)) {
+            if (board[x + diagMove * direction][y + diagMove] == ' ') {
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + (diagMove * direction)) + ":" + (y + diagMove)); //show user the available moves
+                char[][] aBoard = new char[board.length][board.length];
+                aBoard = copyBoard(board);
+                aBoard[x + diagMove * direction][y + diagMove] = 'B';
+                aBoard[x][y] = ' ';
+                int[] XY = { x + diagMove * direction, y + diagMove};
+                updatedXY.add(XY);
+                moveList.add(aBoard);
+                diagMove++;
+            } else {
+                break;
+            }
         }//Checks for Upper-Right
-
-        /*while (board[x - diagMove * direction][y - diagMove * direction] == ' ') {
-            System.out.println("(" + (moveList.size() + 1) + ") " + (x - (diagMove * direction)) + ":" + (y - (diagMove * direction))); //show user the available moves
-            char[][] aBoard = new char[board.length][board.length];
-            aBoard = copyBoard(board);
-            aBoard[x - diagMove * direction][y - diagMove * direction] = 'B';
-            aBoard[x][y] = ' ';
-            moveList.add(aBoard);
+        
+        diagMove = 1;
+        
+        while (inBounds(x + diagMove * -direction, y + diagMove)) {
+            if (board[x + diagMove * -direction][y + diagMove ] == ' ') {
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y + diagMove)); //show user the available moves
+                char[][] aBoard = new char[board.length][board.length];
+                aBoard = copyBoard(board);
+                aBoard[x - diagMove * direction][y + diagMove] = 'B';
+                aBoard[x][y] = ' ';
+                int[] XY = { x + diagMove * -direction, y + diagMove};
+                updatedXY.add(XY);
+                moveList.add(aBoard);
+                diagMove++;
+            } else {
+                break;
+            }
         }//Checks for Down-Right
-
-        while (board[x - diagMove * direction][y + diagMove * direction] == ' ') {
-            System.out.println("(" + (moveList.size() + 1) + ") " + (x - (diagMove * direction)) + ":" + (y + (diagMove * direction))); //show user the available moves
-            char[][] aBoard = new char[board.length][board.length];
-            aBoard = copyBoard(board);
-            aBoard[x - diagMove * direction][y + diagMove * direction] = 'B';
-            aBoard[x][y] = ' ';
-            moveList.add(aBoard);
+        
+        diagMove = 1;
+        
+        while (inBounds(x + diagMove * -direction, y - diagMove)) {
+            if (board[x + diagMove * -direction][y - diagMove] == ' ') {
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y - diagMove)); //show user the available moves
+                char[][] aBoard = new char[board.length][board.length];
+                aBoard = copyBoard(board);
+                aBoard[x + diagMove * -direction][y - diagMove] = 'B';
+                aBoard[x][y] = ' ';
+                int[] XY = { x +diagMove * -direction, y - diagMove};
+                updatedXY.add(XY);
+                moveList.add(aBoard);
+                diagMove++;
+            } else {
+                break;
+            }
         }//Checks for Down-Left
-        
-        *///TODO:MAKE OUT OF BOUNDS EXCEPTION
-        
+
         if (moveList.size() != 0) {
 
             boolean validChoice = true;
