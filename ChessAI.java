@@ -64,36 +64,37 @@ public class ChessAI {
             board[4][j] = ' ';
             board[5][j] = ' ';
         }
-        board[7][0] = 'R';
+       /* board[7][0] = 'R';
         pieces r1 = new rook(7, 0, -1, "Rook");
-//        HumanPieces.add(r1);
+        HumanPieces.add(r1);
         board[7][1] = 'N';
         pieces n1 = new knight(7, 1, -1, "Knight");
         HumanPieces.add(n1);
         board[7][2] = 'B';
         pieces b1 = new bishop(7, 2, -1, "Bishop");
-        HumanPieces.add(b1);
+        HumanPieces.add(b1);*/
         board[7][3] = 'K';
         pieces k = new king(7, 3, -1, "King");
-//        HumanPieces.add(k);
-        board[7][4] = 'Q';
+        HumanPieces.add(k);
+        /*board[7][4] = 'Q';
         pieces q = new queen(7, 4, -1, "Queen");
-//        HumanPieces.add(q);
+        HumanPieces.add(q);
         board[7][5] = 'B';
         pieces b2 = new bishop(7, 5, -1, "Bishop");
-//        HumanPieces.add(b2);
+        HumanPieces.add(b2);
         board[7][6] = 'N';
         pieces n2 = new knight(7, 6, -1, "Knight");
-//        HumanPieces.add(n2);
+        HumanPieces.add(n2);
         board[7][7] = 'R';
         pieces r2 = new rook(7, 7, -1, "Rook");
-
-//        HumanPieces.add(r2);
+        HumanPieces.add(r2);*/
+        
         for (int i = 0; i < board.length; i++) {
             board[6][i] = 'P';
             pieces p = new pawn(6, i, -1, "Pawn");
             HumanPieces.add(p);
         }
+                
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {

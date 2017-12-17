@@ -107,6 +107,9 @@ public class bishop extends pieces {
                 } else {
                     if (choice > 0 && choice <= moveList.size()) {
                         validChoice = false;
+                        int[] XY = updatedXY.get(choice - 1);
+                        x = XY[0];
+                        y = XY[1];
                         return moveList.get(choice - 1);
                     } else {
                         System.out.println("That was an invalid choice,please try again");
