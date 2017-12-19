@@ -8,8 +8,8 @@ public class queen extends pieces {
     int value = 9;
     Scanner kbd = new Scanner(System.in);
     
-    public queen(int x, int y, int direction, String name) {
-        super(x, y, direction, name);
+    public queen(int x, int y, int direction, String name,int team) {
+        super(x, y, direction, name,team);
     }
 
     public char[][] move(char[][] board, int x, int y) {

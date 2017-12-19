@@ -8,8 +8,8 @@ public class king extends pieces {
     int value = 100;
     Scanner kbd = new Scanner(System.in);
 
-    public king(int x, int y, int direction, String name) {
-        super(x, y, direction, name);
+    public king(int x, int y, int direction, String name,int team) {
+        super(x, y, direction, name,team);
     }
 
     public char[][] move(char[][] board, int x, int y) {

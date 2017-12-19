@@ -9,8 +9,8 @@ public class knight extends pieces {
     Scanner kbd = new Scanner(System.in);
     int pX, pY;
 
-    public knight(int x, int y, int direction, String name) {
-        super(x, y, direction, name);
+    public knight(int x, int y, int direction, String name,int team) {
+        super(x, y, direction, name,team);
         pX = x;
         pY = y;
     }

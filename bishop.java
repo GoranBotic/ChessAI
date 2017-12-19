@@ -8,8 +8,8 @@ public class bishop extends pieces {
     int value = 3;
     Scanner kbd = new Scanner(System.in);
 
-    public bishop(int x, int y, int direction, String name) {
-        super(x, y, direction, name);
+    public bishop(int x, int y, int direction, String name,int team) {
+        super(x, y, direction, name,team);
     }
 
     public char[][] move(char[][] board, int x, int y) {

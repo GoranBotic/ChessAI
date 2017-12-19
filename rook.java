@@ -8,8 +8,8 @@ public class rook extends pieces {
     int value = 5;
     Scanner kbd = new Scanner(System.in);
 
-    public rook(int x, int y, int direction, String name) {
-        super(x, y, direction, name);
+    public rook(int x, int y, int direction, String name,int team) {
+        super(x, y, direction, name,team);
     }
 
     public char[][] move(char[][] board, int x, int y) {
