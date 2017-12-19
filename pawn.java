@@ -72,7 +72,7 @@ public class pawn extends pieces {
                         int[] XY = {x + 1 * direction, y - 1};
                         updatedXY.add(XY);
                         moveList.add(aBoard);
-                        this.removePiece(p, AiList, HumanList);
+                        
                     }
                 }
             }//checks to attack left
@@ -92,7 +92,7 @@ public class pawn extends pieces {
                         int[] XY = {x + 1 * direction, y + 1};
                         updatedXY.add(XY);
                         moveList.add(aBoard);
-                        this.removePiece(p, AiList, HumanList);
+                        
                     }
                 }
             }//checks to attack right
@@ -108,10 +108,16 @@ public class pawn extends pieces {
                     validChoice = false; //this breaks out of loop and nothing happens to board
                 } else {
                     if (choice > 0 && choice <= moveList.size()) {
+                        int[] XY = updatedXY.get(choice - 1);//get piece's new location
                         validChoice = false;
-                        int[] XY = updatedXY.get(choice - 1);
+                        pieces p = checkPiece(XY[0], XY[1], HumanList, AiList);
+                        if (p != null) {
+                            this.removePiece(p, HumanList, AiList);
+                        }
+                        
                         x = XY[0];
                         y = XY[1];
+
                         return moveList.get(choice - 1);
                     } else {
                         System.out.println("That was an invalid choice,please try again");

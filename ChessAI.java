@@ -46,7 +46,7 @@ public class ChessAI {
 
     public void initBoard() {
 
-        /*board[0][0] = 'r';
+        board[0][0] = 'r';
         pieces r0 = new rook(0, 0, 1, "r",1);
         AiPieces.add(r0);
         board[0][1] = 'n';
@@ -69,7 +69,7 @@ public class ChessAI {
         AiPieces.add(n3);
         board[0][7] = 'r';
         pieces r3 = new rook(0, 7, 1, "r",1);
-        AiPieces.add(r3);*/
+        AiPieces.add(r3);
 
         for (int i = 0; i < board.length; i++) {
             board[1][i] = 'p';
@@ -101,16 +101,16 @@ public class ChessAI {
         pieces b2 = new bishop(7, 5, -1, "B",0);
         HumanPieces.add(b2);
         board[7][6] = 'N';
-        pieces n2 = new knight(7, 6, -1, "K",0);
-        HumanPieces.add(n2);
+        pieces n2 = new knight(7, 6, -1, "N",0);
+        HumanPieces.add(n2);*/
         board[7][7] = 'R';
         pieces r2 = new rook(7, 7, -1, "R",0);
-        HumanPieces.add(r2);*/
+        HumanPieces.add(r2);
         
         for (int i = 0; i < board.length; i++) {
-            board[6][i] = 'P';
-            pieces p = new pawn(6, i, -1, "P",0);
-            HumanPieces.add(p);
+            board[6][i] = ' ';
+            /*pieces p = new pawn(6, i, -1, "P",0);
+            HumanPieces.add(p);*/
         }
                 
 
