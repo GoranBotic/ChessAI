@@ -8,29 +8,29 @@ public class king extends pieces {
     int value = 100;
     Scanner kbd = new Scanner(System.in);
 
-    public king(int x, int y, int direction, String name,int team) {
-        super(x, y, direction, name,team);
+    public king(int x, int y, int direction, String name, int team) {
+        super(x, y, direction, name, team);
     }
 
-    public char[][] move(char[][] board, int x, int y) {
+    public char[][] move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
         ArrayList<char[][]> movesList = new ArrayList();
-        board = Available_Moves(board, movesList);
+        board = Available_Moves(board, movesList, HumanList, AiList);
         return board;
     }//x and y describes location of piece
 
-    public char[][] Available_Moves(char[][] board, ArrayList<char[][]> movesList) {
+    public char[][] Available_Moves(char[][] board, ArrayList<char[][]> movesList, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
         ArrayList<char[][]> moveList = new ArrayList();
         ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
         int aMove = 1;
 
         System.out.println("Selct an available move(s): ");
+        
         if (inBounds(x + aMove * direction, y)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x + aMove * direction][y] == ' ') {
-
-                System.out.println("(" + (moveList.size() + aMove) + ") " + (x + aMove * direction) + ":" + y); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y); //show user the available moves
                 aBoard[x + aMove * direction][y] = 'K';
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * direction, y};
@@ -38,16 +38,33 @@ public class king extends pieces {
                 moveList.add(aBoard);
                 aMove++;
 
-            }//looks for moves Up
+            } else {
+                if (board[x + aMove * direction][y] != ' ') {
+                    pieces p = checkPiece(x + aMove * direction, y, AiList, HumanList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y);
+                            aBoard[x + aMove * direction][y] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * direction, y};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+
+                        }
+                    }
+                }//checks to attack Down
+                
+            }//looks for moves Down
         }
         aMove = 1;
-
+        
         if (inBounds(x + aMove * -direction, y)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x + aMove * -direction][y] == ' ') {
 
-                System.out.println("(" + (moveList.size() + aMove) + ") " + (x + aMove * -direction) + ":" + y); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y); //show user the available moves
+
                 aBoard[x + aMove * -direction][y] = 'K';
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * -direction, y};
@@ -55,103 +72,211 @@ public class king extends pieces {
                 moveList.add(aBoard);
                 aMove++;
 
-            }  //looks for moves Down
+            } else {
+                if (board[x + aMove * -direction][y] != ' ') {
+                    pieces p = checkPiece(x + aMove * -direction, y, AiList, HumanList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y);
+                            aBoard[x + aMove * -direction][y] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * -direction, y};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+
+                        }
+                    }
+                }//checks to attack Up
+                
+            }//looks for moves Up
         }
-
         aMove = 1;
-
         if (inBounds(x, y + aMove * direction)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x][y + aMove * direction] == ' ') {
 
                 System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+
                 aBoard[x][y + aMove * direction] = 'K';
                 aBoard[x][y] = ' ';
                 int[] XY = {x, y + aMove * direction};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
-            } //looks for moves Left
+            } else {
+                if (board[x][y + aMove * direction] != ' ') {
+                    pieces p = checkPiece(x, y + aMove * direction, AiList, HumanList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction));
+                            aBoard[x][y + aMove * direction] = 'R';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x, y + aMove * direction};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
 
+                        }
+                    }
+                }//checks to attack Left
+                
+            }//looks for moves Left
         }
         aMove = 1;
         if (inBounds(x, y + aMove * -direction)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x][y + aMove * -direction] == ' ') {
 
                 System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+
                 aBoard[x][y + aMove * -direction] = 'K';
                 aBoard[x][y] = ' ';
                 int[] XY = {x, y + aMove * -direction};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
-            }
+            } else {
+                if (board[x][y + aMove * -direction] != ' ') {
+                    pieces p = checkPiece(x, y + aMove * -direction, AiList, HumanList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction));
+                            aBoard[x][y + aMove * -direction] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x, y + aMove * -direction};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
 
-        } //looks for moves Right
-        
+                        }
+                    }
+                }//checks to attack Right
+                
+            }//looks for moves Right
+        }
+
         if (inBounds(x + aMove * direction, y - aMove)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board); //reset the board pieces
             if (board[x + aMove * direction][y - aMove] == ' ') {
                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
                 aBoard[x + aMove * direction][y - aMove] = 'K';
                 aBoard[x][y] = ' ';
-                int[] XY = { x + aMove * direction, y - aMove};
+                int[] XY = {x + aMove * direction, y - aMove};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++; //increment aMove
-            } 
+            } else {
+                if (board[x + aMove * direction][y - aMove] != ' ') {
+                    pieces p = checkPiece(x + aMove * direction, y - aMove, HumanList, AiList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove));
+                            aBoard[x + aMove * direction][y - aMove] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * direction, y - aMove};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+                        }
+                    }
+                }//checks to attack Upper-left
+                
+            }
         }//Checks for Upper-Left
-        
+
         aMove = 1; //reset aMove
-        
+
         if (inBounds(x + aMove * direction, y + aMove)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x + aMove * direction][y + aMove] == ' ') {
                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + (aMove * direction)) + ":" + (y + aMove)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+
                 aBoard[x + aMove * direction][y + aMove] = 'K';
                 aBoard[x][y] = ' ';
-                int[] XY = { x + aMove * direction, y + aMove};
+                int[] XY = {x + aMove * direction, y + aMove};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
-            } 
+            } else {
+                if (board[x + aMove * direction][y + aMove] != ' ') {
+                    pieces p = checkPiece(x + aMove * direction, y + aMove, HumanList, AiList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y + aMove));
+                            aBoard[x + aMove * direction][y + aMove] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * direction, y + aMove};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+                        }
+                    }
+                }//checks to attack Upper-Right
+                
+            }
         }//Checks for Upper-Right
-        
+
         aMove = 1;
-        
+
         if (inBounds(x + aMove * -direction, y + aMove)) {
-            if (board[x + aMove * -direction][y + aMove ] == ' ') {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
+            if (board[x + aMove * -direction][y + aMove] == ' ') {
                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
+
                 aBoard[x - aMove * direction][y + aMove] = 'K';
                 aBoard[x][y] = ' ';
-                int[] XY = { x + aMove * -direction, y + aMove};
+                int[] XY = {x + aMove * -direction, y + aMove};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
+            } else {
+                if (board[x + aMove * -direction][y + aMove] != ' ') {
+                    pieces p = checkPiece(x + aMove * -direction, y + aMove, HumanList, AiList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove));
+                            aBoard[x + aMove * -direction][y + aMove] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * -direction, y + aMove};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+                        }
+                    }
+                }//checks to attack Down-Right
+                
             }
         }//Checks for Down-Right
-        
+
         aMove = 1;
-        
+
         if (inBounds(x + aMove * -direction, y - aMove)) {
+            char[][] aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
             if (board[x + aMove * -direction][y - aMove] == ' ') {
                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove)); //show user the available moves
-                char[][] aBoard = new char[board.length][board.length];
-                aBoard = copyBoard(board);
-                aBoard[x + aMove * -direction][y - aMove] = 'B';
+                aBoard[x + aMove * -direction][y - aMove] = 'K';
                 aBoard[x][y] = ' ';
-                int[] XY = { x +aMove * -direction, y - aMove};
+                int[] XY = {x + aMove * -direction, y - aMove};
                 updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
-            } 
+            } else {
+                if (board[x + aMove * -direction][y - aMove] != ' ') {
+                    pieces p = checkPiece(x + aMove * -direction, y - aMove, HumanList, AiList);
+                    if (p != null) {
+                        if (this.team != p.team) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove));
+                            aBoard[x + aMove * -direction][y - aMove] = 'K';
+                            aBoard[x][y] = ' ';
+                            int[] XY = {x + aMove * -direction, y - aMove};
+                            updatedXY.add(XY);
+                            moveList.add(aBoard);
+                        }
+                    }
+                }//checks to attack Down-Right
+                
+            }
         }//Checks for Down-Left
 
         if (moveList.size() != 0) {
