@@ -7,6 +7,8 @@ public abstract class pieces {
     int x, y, direction, team,value,AiControl; //AiControl will turn off the messages for human users
     char name;
     ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
+    
+   
 
     public pieces(int x, int y, int direction, char name, int team,int value,int AiControl) {
         this.x = x;
@@ -18,10 +20,9 @@ public abstract class pieces {
         this.AiControl = AiControl;
     }
 
-    public abstract ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> Human, ArrayList<pieces> AiList); //{
+    public abstract ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList); 
 
-    //return board;
-    // }
+  
     public boolean inBounds(int x, int y) {
 
         if (x < 0 || x > 7) {

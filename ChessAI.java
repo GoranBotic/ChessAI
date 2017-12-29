@@ -13,6 +13,7 @@ public class ChessAI {
 
     char[][] board, newBoard;
     int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
+
     int depth = 2; //defines the current depth in game tree
     final int MaxDepth = 2; //defines the max depth
     boolean playerTurn = true; //determines who's turn it is. 0: AI 1: Human
@@ -49,15 +50,13 @@ public class ChessAI {
             }//the player's turn
 
             while (playerTurn == false) {
-                for (int i = 0; i < AiPieces.size(); i++) {
-                    pieces p = AiPieces.get(i);
-                    ArrayList<char[][]> moveList = new ArrayList();
-                    moveList = p.move(board, p.x, p.y, HumanPieces, AiPieces); //get all available moves for the Ai
-                    if (!moveList.isEmpty()) {
-                        newBoard = mini(board, depth, p, alpha, beta, moveList);//alpha = best local max, beta = best local min
-                    }
-                }
+
+                newBoard = mini(board, depth, alpha, beta);//alpha = best local max, beta = best local min
+                playerTurn = true;
+                System.out.println();
+                updateBoard(newBoard); //prints new board 
             }//While Ai's turn 
+
         }
     }
 
@@ -100,98 +99,113 @@ public class ChessAI {
     The Ai will choose a move that minimizes the player's maximum score,
     we will be assuming the player will always make the best move.
      */
-    public char[][] mini(char[][] theBoard, int depth, pieces thePiece, int alpha, int beta, ArrayList<char[][]> moveList) {
+    public char[][] mini(char[][] theBoard, int depth, int alpha, int beta) {
         ArrayList<char[][]> nextMoves = new ArrayList();
 
         if (depth == 0) { //if we are at the leaf nodes 
-            int value = EvaluateBoard(theBoard); //Find values of each different board states
-            System.out.println();
-            updateBoard(theBoard);
-            this.alpha = value;
+            return theBoard;
 
         } else {
             depth--;
-            int prevX = thePiece.x;
-            int prevY = thePiece.y; //save the piece's last location
             int bestX = 0, bestY = 0;
+            for (int i = 0; i < AiPieces.size(); i++) {
 
-            while (!moveList.isEmpty()) {
-                theBoard = moveList.get(0); //Ai chooses the first available move
+                pieces p = AiPieces.get(i);
 
-                int[] XY = thePiece.updatedXY.get(0); //get new piece location
-                thePiece.x = XY[0];
-                thePiece.y = XY[1]; //set new location
-                moveList.remove(0); //take out the move  
-                nextMoves = thePiece.move(theBoard, thePiece.x, thePiece.y, HumanPieces, AiPieces);  //get next moves
-                char[][] tempBoard = theBoard.clone();//use for getting value of next move
-                tempBoard = max(theBoard, depth, thePiece, alpha, beta, moveList);
-                if (this.beta <= beta) {
-                    beta = this.beta; //update the beta
-                    theBoard = tempBoard; //update the best Board state
-                    bestX = thePiece.x;
-                    bestY = thePiece.y;
+                nextMoves = p.move(theBoard, p.x, p.y, HumanPieces, AiPieces);
+                int prevX = p.x;
+                int prevY = p.y; //save the piece's last location
+                while (!nextMoves.isEmpty()) {
+                     //*****************************************
+                    theBoard = nextMoves.get(0); //Ai gets available move for that piece
+                    int[] XY = p.updatedXY.get(0); //get new piece location
+                    p.x = XY[0];
+                    p.y = XY[1]; //set new location
+                    nextMoves.remove(0); //take out the move  
+                    p.updatedXY.remove(0); //removes a from movelist
+                    char[][] tempBoard = new char[8][8];//use for getting value of next move
+                    tempBoard = copyBoard(theBoard);//use for getting value of next move
+                    //******************************************* maybe move into alpha < beta if?
+                    if (alpha < beta) {
+                        tempBoard = max(theBoard, depth, alpha, beta);
+                        System.out.println();
+                        updateBoard(theBoard);
+                        int value = EvaluateBoard(tempBoard);
+                        if (value < beta) {
+                            beta = value; //update new beta
+                            theBoard = tempBoard; //update the best Board state
+                            //bestX = p.x;
+                            //bestY = p.y;
+                        }
+                        undoMove(prevX, prevY, p, theBoard);
+                    }
+
                 }
-                thePiece.x = prevX;
-                thePiece.y = prevY;//undo the location
             }
-            depth++;
-            if (depth == MaxDepth) {
-                thePiece.x = bestX;
-                thePiece.y = bestY;
-            }//if we are 1 depth below root,update the piece's best move
 
         }//recursive method
 
         return theBoard;
-    }
+    }//mini function
 
-    public char[][] max(char[][] theBoard, int depth, pieces thePiece, int alpha, int beta, ArrayList<char[][]> moveList) {
+    public char[][] max(char[][] theBoard, int depth, int alpha, int beta) {
 
         ArrayList<char[][]> nextMoves = new ArrayList(); //create a branch for every move available for player
 
         if (depth == 0) {
-            int value = EvaluateBoard(theBoard); //Find values of each different board states
-            if (value <= beta) {
-                this.beta = value;
-            }
+            return theBoard;
         } else {
             depth--;
             int bestX = 0, bestY = 0;
             for (int i = 0; i < HumanPieces.size(); i++) {
+
                 pieces p = HumanPieces.get(i);
                 p.AiControl = 1; //prevents the prompts from showing in console
                 nextMoves = p.move(theBoard, p.x, p.y, HumanPieces, AiPieces);
                 p.AiControl = 0;
                 int prevX = p.x;
                 int prevY = p.y; //save the piece's last location
-                if (!nextMoves.isEmpty()) {
 
-                    while (!nextMoves.isEmpty()) {
-                        theBoard = nextMoves.get(0); //update board with player's move only through ASCII
-                        int[] XY = p.updatedXY.get(0); //get new piece location
-                        p.x = XY[0];
-                        p.y = XY[1]; //set new location
-                        nextMoves.remove(0); //remove possible player move
-                        char[][] tempBoard = theBoard.clone();//use for getting value of next move
-                        tempBoard = mini(theBoard, depth, thePiece, alpha, beta, moveList);
-                        if (this.alpha > alpha) {
-                            alpha = this.alpha; //update the beta
+                while (!nextMoves.isEmpty()) {
+                    //*****************************************
+                    theBoard = nextMoves.get(0); //update board with player's move only through ASCII
+                    int[] XY = p.updatedXY.get(0); //get new piece location
+                    p.x = XY[0];
+                    p.y = XY[1]; //set new location
+                    nextMoves.remove(0); //remove possible player move
+                    p.updatedXY.remove(0); // remove respective player move
+                    char[][] tempBoard = copyBoard(theBoard);//use for getting value of next move
+                    //******************************************* maybe move into alpha < beta if?
+                    if (alpha < beta) {
+                        tempBoard = mini(theBoard, depth, alpha, beta);
+                        System.out.println();
+                        updateBoard(theBoard);
+                        int value = EvaluateBoard(tempBoard);
+
+                        if (value > alpha) {
+                            alpha = value; //update the beta
                             theBoard = tempBoard; //update the best Board state
-                            p.x = bestX;
-                            p.y = bestY;
-                        }
-                        p.x = prevX;
-                        p.y = prevY; //undo the move and loop for next move
 
-                    }
-                }//check if the piece can make a move
+                            //bestX = p.x;
+                            //bestY = p.y;
+                        }
+
+                        undoMove(prevX, prevY, p, theBoard);
+
+                    }//if our local max is less than our local min the evaluate else prune
+
+                }
 
             }//looks through all pieces player can move
 
+            /*theBoard[p.x][p.y] = ' ';
+            p.x = bestX;
+            p.y = bestY;
+            theBoard[p.x][p.y] = p.name; //update the best boardstate*/
         }
 
         return theBoard;
-    }
+    }//max function
 
     public int EvaluateBoard(char[][] board) {
         int totalValue, HumanVal = 0, AiVal = 0;
@@ -294,6 +308,25 @@ public class ChessAI {
 
         return board;
     }
+
+    public char[][] copyBoard(char[][] someBoard) {
+        char[][] resultBoard = new char[someBoard.length][someBoard.length];
+        for (int i = 0; i < someBoard.length; i++) {
+            for (int j = 0; j < someBoard[i].length; j++) {
+                resultBoard[i][j] = someBoard[i][j];
+            }
+
+        }
+        return resultBoard;
+    }
+
+    public void undoMove(int prevX, int prevY, pieces p, char[][] theBoard) {
+        theBoard[p.x][p.y] = ' ';
+        p.x = prevX;
+        p.y = prevY;
+        theBoard[p.x][p.y] = p.name;
+
+    }//undo's the move 
 
     public static void main(String[] args) {
         ChessAI c = new ChessAI();

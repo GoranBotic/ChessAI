@@ -204,7 +204,7 @@ public class knight extends pieces {
         aBoard = copyBoard(board);
 
         if (inBounds(x + horiMove * -direction, y - vertMove)) {
-            if (board[x + horiMove * -direction][y + vertMove] == ' ') {
+            if (board[x + horiMove * -direction][y - vertMove] == ' ') {
                 if (AiControl == 0) {
                     System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * -direction) + ":" + (y - vertMove)); //show user the available moves
                 }

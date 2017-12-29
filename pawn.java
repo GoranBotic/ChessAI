@@ -9,6 +9,9 @@ public class pawn extends pieces {
     Scanner kbd = new Scanner(System.in);
     boolean initial = true; //checks if the pawn has moved from initial position
 
+    
+    
+    
     public pawn(int x, int y, int direction, char name, int team, int value, int AiControl) {
         super(x, y, direction, name, team, value, AiControl);
     }
@@ -60,7 +63,9 @@ public class pawn extends pieces {
                     int[] XY = {x + 2 * direction, y};
                     this.updatedXY.add(XY);
                     moveList.add(aBoard);
+
                     initial = false;
+
                 }
             }
         }

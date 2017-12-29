@@ -69,7 +69,7 @@ public class bishop extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + diagMove * direction][y + diagMove] == ' ') {
-                if (this.team == 0) {
+                if (AiControl == 0) {
                     System.out.println("(" + (moveList.size() + 1) + ") " + (x + (diagMove * direction)) + ":" + (y + diagMove)); //show user the available moves
                 }
 
@@ -107,7 +107,7 @@ public class bishop extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + diagMove * -direction][y + diagMove] == ' ') {
-                if (this.team == 0) {
+                if (AiControl == 0) {
                     System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y + diagMove)); //show user the available moves
                 }
 
@@ -126,11 +126,9 @@ public class bishop extends pieces {
                             if (AiControl == 0) {
                                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y + diagMove));
                             }
-                            if (this.team == 0) {
-                                aBoard[x + diagMove * -direction][y + diagMove] = 'B';
-                            } else {
-                                aBoard[x + diagMove * -direction][y + diagMove] = 'b';
-                            }
+
+                            aBoard[x + diagMove * -direction][y + diagMove] = this.name;
+
                             aBoard[x][y] = ' ';
                             int[] XY = {x + diagMove * -direction, y + diagMove};
                             this.updatedXY.add(XY);
@@ -148,7 +146,7 @@ public class bishop extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + diagMove * -direction][y - diagMove] == ' ') {
-                if (this.team == 0) {
+                if (AiControl == 0) {
                     System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y - diagMove)); //show user the available moves
                 }
 
