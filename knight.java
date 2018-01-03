@@ -7,12 +7,9 @@ public class knight extends pieces {
 
     int value = 3;
     Scanner kbd = new Scanner(System.in);
-    int pX, pY;
 
     public knight(int x, int y, int direction, char name, int team, int value, int AiControl) {
         super(x, y, direction, name, team, value, AiControl);
-        pX = x;
-        pY = y;
     }
 
     public ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
