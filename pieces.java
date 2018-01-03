@@ -20,7 +20,7 @@ public abstract class pieces {
         this.AiControl = AiControl;
     }
 
-    public abstract ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList); 
+    public  abstract ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList);
 
   
     public boolean inBounds(int x, int y) {
@@ -34,9 +34,7 @@ public abstract class pieces {
         return true;
     }
 
-    public char getName() {
-        return name;
-    }
+
 
     public pieces checkPiece(int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
