@@ -136,30 +136,42 @@ public class ChessAI {
                         p.y = XY[1]; //set new location
                         nextMoves.remove(0); //take out the move  
                         p.updatedXY.remove(0); //removes a from movelist
+                        System.out.println();
+                        updateBoard(tempBoard);
 
-                        tempBoard = max(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
+                        if (beta > alpha) {
+                            tempBoard = max(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
+                            //beta = this.beta;
+                        }
+
                         System.out.println();
                         updateBoard(tempBoard);
                         System.out.println("mini");
 
-                        int value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
-                        if (value < beta) {
-                            beta = value; //update new beta
+                        if (this.beta == Integer.MAX_VALUE) {
+                            this.beta = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
+                        }
+
+                        if (this.beta < beta) {
+                            beta = this.beta; //update new beta
                             bestPiece = p;
                             bestX = p.x;
                             bestY = p.y;
                             tempBoard = copyBoard(theBoard);
                             tempHumanList = copyList(HumanList);//undoes the player move
-                           
+
                             System.out.println();
                             updateBoard(tempBoard);
                             System.out.println("replace beta");
-                            if (beta >= alpha) {
-
-                            } else {
-                                break;//prune here, break?
+                            if (beta <= alpha) {
+                                undoMove(prevX, prevY, p, tempBoard);
+                                break;//prune here
                             }
 
+                        } else {
+                            tempHumanList = copyList(HumanList);//undoes the player move
+                            System.out.println();
+                            updateBoard(tempBoard);
                         }
                         undoMove(prevX, prevY, p, tempBoard);
                     }//while moves are empty
@@ -169,6 +181,9 @@ public class ChessAI {
 
         }//recursive method
         undoMove(bestX, bestY, bestPiece, theBoard);
+        if (this.alpha > beta) {
+            this.alpha = beta;
+        }//update beta if this board is better for min
         return theBoard;
     }//mini function
 
@@ -210,30 +225,34 @@ public class ChessAI {
                         p.y = XY[1]; //set new location
                         nextMoves.remove(0); //remove possible player move
                         p.updatedXY.remove(0); // remove respective player move
-
-                        tempBoard = mini(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
+                        if (alpha < beta) {
+                            tempBoard = mini(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
+                        }
                         System.out.println();
                         updateBoard(tempBoard);
                         System.out.println("maxi");
-                        int value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
 
-                        if (value > alpha) {
-                            alpha = value; //update the alpha
-                            bestPiece = p;
+                        if (this.alpha == Integer.MIN_VALUE) {
+                            this.alpha = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
+                        }
+
+                        if (this.alpha > alpha) {
+                            alpha = this.alpha; //update the alpha
+                            bestPiece = p; //store the best piece
                             bestX = p.x;
                             bestY = p.y;//get the best piece and it's move
 
+                            undoMove(prevX, prevY, p, tempBoard); //undo move
                             tempAiList = copyList(AiList);
-                            
                             System.out.println();
                             updateBoard(tempBoard);
-
                             System.out.println("replace alpha");
-                            if (alpha <= beta) {
+                            if (alpha >= beta) {
 
-                            } else {
                                 break; //prune
                             }//if board is not higher than beta set the new board
+                        } else {
+                            tempAiList = copyList(AiList);
                         }//check if board is greater than current alpha
 
                         undoMove(prevX, prevY, p, tempBoard);
@@ -242,8 +261,13 @@ public class ChessAI {
 
             }//looks through all pieces player can move
 
-        }
+        } //recursive method 
+
         undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
+
+        if (this.beta > alpha) {
+            this.beta = alpha;
+        }//update beta if this board is better for min
 
         return theBoard;
     }//max function
@@ -378,14 +402,6 @@ public class ChessAI {
             value = p.value;
             AiControl = p.AiControl;
 
-//            for(int j=0;j<p.updatedXY.size();i++){
-//                int copyX,copyY;
-//                int[] XY = p.updatedXY.get(j);
-//                copyX = XY[0];
-//                copyY = XY[1];
-//                int[] copyXY = {copyX,copyY};
-//                updatedXY.add(copyXY);
-//            }//deep copy all movelists
             if (p instanceof pawn) {
                 pieces newPiece = new pawn(x, y, direction, name, team, value, AiControl);
                 resultList.add(newPiece);
