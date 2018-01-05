@@ -7,7 +7,7 @@ public abstract class pieces {
     int x, y, direction, team,value,AiControl; //AiControl will turn off the messages for human users
     char name;
     ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
-    ArrayList<pieces> bestList = new ArrayList();
+    
    
 
     public pieces(int x, int y, int direction, char name, int team,int value,int AiControl) {

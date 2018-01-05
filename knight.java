@@ -36,9 +36,9 @@ public class knight extends pieces {
                 if (AiControl == 0) {
                     System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * direction) + ":" + (y + horiMove)); //show user the available moves
                 }
-                
-                    aBoard[x + vertMove * direction][y + horiMove] = this.name;
-                
+
+                aBoard[x + vertMove * direction][y + horiMove] = this.name;
+
                 aBoard[x][y] = ' ';
                 int[] XY = {x + vertMove * direction, y + horiMove};
                 this.updatedXY.add(XY);
@@ -185,6 +185,7 @@ public class knight extends pieces {
                             if (AiControl == 0) {
                                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * -direction) + ":" + (y - horiMove));
                             }
+                            
                             aBoard[x + vertMove * -direction][y - horiMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + vertMove * -direction, y - horiMove};

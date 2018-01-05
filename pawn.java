@@ -9,9 +9,6 @@ public class pawn extends pieces {
     Scanner kbd = new Scanner(System.in);
     boolean initial = true; //checks if the pawn has moved from initial position
 
-    
-    
-    
     public pawn(int x, int y, int direction, char name, int team, int value, int AiControl) {
         super(x, y, direction, name, team, value, AiControl);
     }
@@ -51,23 +48,27 @@ public class pawn extends pieces {
         aBoard = copyBoard(board);
 
         if (initial == true) {
+
             if (inBounds(x + 2 * direction, y)) {
-                if (board[x + 2 * direction][y] == ' ') {
-                    if (AiControl == 0) {
-                        System.out.println("(" + (moveList.size() + 1) + ") " + (x + (2 * direction)) + ":" + (y));
+                if (board[x + 1 * direction][y] == ' ') {
+                    if (board[x + 2 * direction][y] == ' ') {
+                        if (AiControl == 0) {
+                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + (2 * direction)) + ":" + (y));
+                        }
+
+                        aBoard[x + 2 * direction][y] = this.name;
+
+                        aBoard[x][y] = ' ';
+                        int[] XY = {x + 2 * direction, y};
+                        this.updatedXY.add(XY);
+                        moveList.add(aBoard);
+
+                        initial = false;
+
                     }
-
-                    aBoard[x + 2 * direction][y] = this.name;
-
-                    aBoard[x][y] = ' ';
-                    int[] XY = {x + 2 * direction, y};
-                    this.updatedXY.add(XY);
-                    moveList.add(aBoard);
-
-                    initial = false;
-
                 }
             }
+
         }
 
         aBoard = new char[board.length][board.length];
@@ -81,6 +82,7 @@ public class pawn extends pieces {
                         if (AiControl == 0) {
                             System.out.println("(" + (moveList.size() + 1) + ") " + (x + (1 * direction)) + ":" + (y - 1));
                         }
+
                         aBoard[x + 1 * direction][y - 1] = this.name;
                         aBoard[x][y] = ' ';
                         int[] XY = {x + 1 * direction, y - 1};
