@@ -7,14 +7,13 @@
 package chessai;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ChessAI {
 
     char[][] board, newBoard;
     int alpha, beta;
-    int depth = 2; //defines the current depth in game tree
+    int depth = 4; //defines the current depth in game tree
     final int MaxDepth = 2; //defines the max depth
     boolean playerTurn = true; //determines who's turn it is. 0: AI 1: Human
     boolean play = true; //determines when the game is done
@@ -56,7 +55,7 @@ public class ChessAI {
                 alpha = Integer.MIN_VALUE;
                 beta = Integer.MAX_VALUE;
 
-                newBoard = mini(newBoard, depth, alpha, beta, HumanPieces, AiPieces);//alpha = best local max, beta = best local min
+                newBoard = mini(newBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, HumanPieces, AiPieces);//alpha = best local max, beta = best local min
                 updateListFromBoard(newBoard, board, HumanPieces, AiPieces);
                 board = copyBoard(newBoard);
                 playerTurn = true;
@@ -108,7 +107,7 @@ public class ChessAI {
     we will be assuming the player will always make the best move.
      */
     public char[][] mini(char[][] theBoard, int depth, int alpha, int beta, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-        ArrayList<char[][]> nextMoves = new ArrayList();
+         ArrayList<char[][]> nextMoves = new ArrayList();
         char[][] tempBoard = new char[8][8];//use for getting value of next move
         tempBoard = copyBoard(theBoard);//use for getting value of next move
         ArrayList<pieces> tempAiList = new ArrayList();
@@ -160,8 +159,8 @@ public class ChessAI {
 
                         nextMoves.remove(0); //take out the move  
                         p.updatedXY.remove(0); //removes a from movelist
-                        System.out.println();
-                        updateBoard(tempBoard);
+//                        System.out.println();
+//                        updateBoard(tempBoard);
                         char[][] currentBoard = copyBoard(tempBoard);
                         int value = 0;
 
@@ -171,8 +170,8 @@ public class ChessAI {
                         value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
                         }
 
-                        System.out.println();
-                        updateBoard(tempBoard);
+//                        System.out.println();
+//                        updateBoard(tempBoard);
 
                         if (value < beta) {
                             beta = value; //update new beta
@@ -181,9 +180,9 @@ public class ChessAI {
                             bestY = p.y;
                             tempBoard = copyBoard(theBoard);
                             tempHumanList = copyList(HumanList);//undoes the player move
-
-                            System.out.println();
-                            updateBoard(tempBoard);
+                            tempAiList = copyList(AiList); //undoes the Ai move
+//                            System.out.println();
+//                            updateBoard(tempBoard);
 
                             if (beta <= alpha) {
                                 undoMove(prevX, prevY, p, tempBoard);
@@ -191,7 +190,10 @@ public class ChessAI {
                             }
 
                         } else {
+                          
+                            tempBoard = copyBoard(theBoard);
                             tempHumanList = copyList(HumanList);//undoes the player move
+                            tempAiList = copyList(AiList);
                             undoMove(prevX, prevY, p, tempBoard);
                             
                         }
@@ -280,8 +282,8 @@ public class ChessAI {
                             updateListFromBoard(tempBoard, currentBoard, tempHumanList, tempAiList);
                             value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
                         }
-                        System.out.println();
-                        updateBoard(tempBoard);
+//                        System.out.println();
+//                        updateBoard(tempBoard);
 
 
                         if (value > alpha) {
@@ -289,16 +291,17 @@ public class ChessAI {
                             bestPiece = HumanList.get(i); //store the best piece
                             bestX = p.x;
                             bestY = p.y;//get the best piece and it's move
-
+                            tempBoard = copyBoard(theBoard);
                             undoMove(prevX, prevY, p, tempBoard); //undo move
                             tempAiList = copyList(AiList);
-                            System.out.println();
-                            updateBoard(tempBoard);
+//                            System.out.println();
+//                            updateBoard(tempBoard);
 
 
                         } else {
                             undoMove(prevX, prevY, p, tempBoard); //undo move
                             tempAiList = copyList(AiList);
+                            tempBoard = copyBoard(theBoard);
                         }//check if board is greater than current alpha
 
                         undoMove(prevX, prevY, p, tempBoard);
@@ -487,8 +490,8 @@ public class ChessAI {
                 ArrayList<char[][]> possibleMoves = pieceMoved.move(tempOrigBoard, pieceMoved.x, pieceMoved.y, HumanList, AiList);
 
                 for (char[][] moves : possibleMoves) {
-                    System.out.println("moves");
-                    updateBoard(moves);
+//                    System.out.println("moves");
+//                    updateBoard(moves);
 
                     if (isEqual(moves, theBoard)) {
                         int[] XY = pieceMoved.updatedXY.get(0);
