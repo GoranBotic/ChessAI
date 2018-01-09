@@ -12,7 +12,6 @@ import java.util.Scanner;
 public class ChessAI {
 
     char[][] board, newBoard;
-    int alpha, beta;
     int depth = 4; //defines the current depth in game tree
     final int MaxDepth = 2; //defines the max depth
     boolean playerTurn = true; //determines who's turn it is. 0: AI 1: Human
@@ -46,23 +45,28 @@ public class ChessAI {
                     board = copyBoard(newBoard);
                     System.out.println();
                     updateBoard(board); //prints new board 
-
+                    isCheck(board,HumanPieces,AiPieces); //notfies player that Ai is in check
                 }
             }//the player's turn
 
-            while (playerTurn == false) {
+            if (checkEnd(newBoard, HumanPieces, AiPieces)) {
+                break;
+            }//check if player has won
 
-                alpha = Integer.MIN_VALUE;
-                beta = Integer.MAX_VALUE;
+            while (playerTurn == false) {
 
                 newBoard = mini(newBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, HumanPieces, AiPieces);//alpha = best local max, beta = best local min
                 updateListFromBoard(newBoard, board, HumanPieces, AiPieces);
                 board = copyBoard(newBoard);
                 playerTurn = true;
                 System.out.println();
-                updateBoard(board); //prints new board 
-
+                updateBoard(board); //prints new board
+                isCheck(board,HumanPieces,AiPieces); //notfies player is in check
             }//While Ai's turn 
+
+            if (checkEnd(newBoard, HumanPieces, AiPieces)) {
+                play = false;
+            }//check if Ai has won
 
         }
     }
@@ -107,7 +111,7 @@ public class ChessAI {
     we will be assuming the player will always make the best move.
      */
     public char[][] mini(char[][] theBoard, int depth, int alpha, int beta, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-         ArrayList<char[][]> nextMoves = new ArrayList();
+        ArrayList<char[][]> nextMoves = new ArrayList();
         char[][] tempBoard = new char[8][8];//use for getting value of next move
         tempBoard = copyBoard(theBoard);//use for getting value of next move
         ArrayList<pieces> tempAiList = new ArrayList();
@@ -159,19 +163,19 @@ public class ChessAI {
 
                         nextMoves.remove(0); //take out the move  
                         p.updatedXY.remove(0); //removes a from movelist
-//                        System.out.println();
-//                        updateBoard(tempBoard);
+                        System.out.println();
+                        updateBoard(tempBoard);
                         char[][] currentBoard = copyBoard(tempBoard);
                         int value = 0;
 
                         if (beta > alpha) {
-                        tempBoard = max(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
-                        updateListFromBoard(tempBoard, currentBoard, tempHumanList, tempAiList);
-                        value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
+                            tempBoard = max(tempBoard, depth, alpha, beta, tempHumanList, tempAiList);
+                            updateListFromBoard(tempBoard, currentBoard, tempHumanList, tempAiList);
+                            value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
                         }
 
-//                        System.out.println();
-//                        updateBoard(tempBoard);
+                        System.out.println();
+                        updateBoard(tempBoard);
 
                         if (value < beta) {
                             beta = value; //update new beta
@@ -181,8 +185,8 @@ public class ChessAI {
                             tempBoard = copyBoard(theBoard);
                             tempHumanList = copyList(HumanList);//undoes the player move
                             tempAiList = copyList(AiList); //undoes the Ai move
-//                            System.out.println();
-//                            updateBoard(tempBoard);
+                            System.out.println();
+                            updateBoard(tempBoard);
 
                             if (beta <= alpha) {
                                 undoMove(prevX, prevY, p, tempBoard);
@@ -190,16 +194,15 @@ public class ChessAI {
                             }
 
                         } else {
-                          
+
                             tempBoard = copyBoard(theBoard);
                             tempHumanList = copyList(HumanList);//undoes the player move
                             tempAiList = copyList(AiList);
                             undoMove(prevX, prevY, p, tempBoard);
-                            
+
                         }
                         undoMove(prevX, prevY, p, tempBoard);
                         if (removed == true) {
-//                            tempHumanList.add(removedPiece);
                             tempBoard[removedX][removedY] = removedPiece.name;
                             removed = false;
                         }
@@ -282,9 +285,8 @@ public class ChessAI {
                             updateListFromBoard(tempBoard, currentBoard, tempHumanList, tempAiList);
                             value = EvaluateBoard(tempBoard, tempHumanList, tempAiList);
                         }
-//                        System.out.println();
-//                        updateBoard(tempBoard);
-
+                        System.out.println();
+                        updateBoard(tempBoard);
 
                         if (value > alpha) {
                             alpha = value; //update the alpha
@@ -294,9 +296,8 @@ public class ChessAI {
                             tempBoard = copyBoard(theBoard);
                             undoMove(prevX, prevY, p, tempBoard); //undo move
                             tempAiList = copyList(AiList);
-//                            System.out.println();
-//                            updateBoard(tempBoard);
-
+                            System.out.println();
+                            updateBoard(tempBoard);
 
                         } else {
                             undoMove(prevX, prevY, p, tempBoard); //undo move
@@ -306,7 +307,6 @@ public class ChessAI {
 
                         undoMove(prevX, prevY, p, tempBoard);
                         if (removed == true) {
-//                            tempAiList.add(removedPiece);
                             tempBoard[removedX][removedY] = removedPiece.name;
                             removed = false;
                         }
@@ -323,8 +323,7 @@ public class ChessAI {
                 removedPiece.removePiece(removedPiece, HumanList, AiList);
             }
         }
-        
-        
+
         undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
 
         return theBoard;
@@ -346,6 +345,12 @@ public class ChessAI {
     }
 
     public void initBoard(ArrayList<pieces> HumanPieces, ArrayList<pieces> AiPieces) {
+
+        for (int i = 0; i < board.length; i++) {
+            board[1][i] = 'p';
+            pieces p = new pawn(1, i, 1, 'p', 1, 1, 1);
+            AiPieces.add(p);
+        }
 
         board[0][0] = 'r';
         pieces r0 = new rook(0, 0, 1, 'r', 1, 5, 1);
@@ -371,11 +376,7 @@ public class ChessAI {
         board[0][7] = 'r';
         pieces r3 = new rook(0, 7, 1, 'r', 1, 5, 1);
         AiPieces.add(r3);
-        for (int i = 0; i < board.length; i++) {
-            board[1][i] = 'p';
-            pieces p = new pawn(1, i, 1, 'p', 1, 1, 1);
-            AiPieces.add(p);
-        }
+
         for (int j = 0; j < board.length; j++) {
             board[2][j] = ' ';
             board[3][j] = ' ';
@@ -590,6 +591,55 @@ public class ChessAI {
         theBoard[p.x][p.y] = p.name;
 
     }//undo's the move 
+
+    public boolean checkEnd(char[][] theBoard, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
+        int value;
+        value = EvaluateBoard(theBoard, HumanList, AiList);
+        if (value >= 100) {
+            System.out.println("Player Wins!");
+            return true;
+        }
+        if (value <= -100) {
+            System.out.println("Ai Wins!");
+            return true;
+        }
+        return false;
+    } //checks if the game is over
+
+    public void isCheck(char[][] theBoard,ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
+        ArrayList<pieces> tempAiList = copyList(AiList);
+        char[][] tempBoard = copyBoard(theBoard);
+        
+        for (pieces p : tempHumanList) {
+            ArrayList<char[][]> movesList = new ArrayList();
+            movesList = p.move(tempBoard, p.x, p.y, tempHumanList, tempAiList);
+            for (int i = 0; i < movesList.size(); i++) {
+                int[] XY = p.updatedXY.get(i);
+                if (theBoard[XY[0]][XY[1]] == 'k') {
+                    //TODO:make a boolean function that returns true if the ai king can find a safe spot
+                    System.out.println("Ai king is in check");
+                    return;
+                }
+            }
+
+        }
+
+        for (pieces p : tempAiList) {
+            ArrayList<char[][]> movesList = new ArrayList();
+            movesList = p.move(tempBoard, p.x, p.y, tempHumanList, tempAiList);
+            for (int i = 0; i < movesList.size(); i++) {
+                int[] XY = p.updatedXY.get(i);
+                if (board[XY[0]][XY[1]] == 'K') {
+                    //TODO:make a boolean function that returns true if the ai king can find a safe spot
+                    System.out.println("Player king is in check");
+                    return;
+                }
+            }
+
+        }
+
+    }//determines if a king is in check
 
     public static void main(String[] args) {
         ChessAI c = new ChessAI();
