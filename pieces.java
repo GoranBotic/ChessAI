@@ -2,24 +2,27 @@ package chessai;
 
 import java.util.ArrayList;
 
-public class pieces {
+public abstract class pieces {
 
-    int x, y, direction, team;
-    String name;
+    int x, y, direction, team,value,AiControl; //AiControl will turn off the messages for human users
+    char name;
+    ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
+    boolean hasMoved = false;
+   
 
-    public pieces(int x, int y, int direction, String name, int team) {
+    public pieces(int x, int y, int direction, char name, int team,int value,int AiControl) {
         this.x = x;
         this.y = y;
         this.direction = direction; //correctly orientates movement of pieces
         this.name = name;
         this.team = team;
+        this.value = value;
+        this.AiControl = AiControl;
     }
 
-    public char[][] move(char[][] board, int x, int y,ArrayList<pieces> Human, ArrayList<pieces> AiList) {
+    public  abstract ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList);
 
-        return board;
-    }
-
+  
     public boolean inBounds(int x, int y) {
 
         if (x < 0 || x > 7) {
@@ -31,13 +34,9 @@ public class pieces {
         return true;
     }
 
-    public String getName() {
-        return name;
-    }
+
 
     public pieces checkPiece(int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-
-       
 
         for (int i = 0; i < AiList.size(); i++) {
             if (AiList.get(i).x == x && AiList.get(i).y == y) {
@@ -50,8 +49,7 @@ public class pieces {
                 return HumanList.get(i);
             }
         }
-        
-        
+
         return null;
     }
 
@@ -61,12 +59,12 @@ public class pieces {
             AiList.remove(p);
             return;
         }
-        
+
         if (HumanList.contains(p)) {
             HumanList.remove(p);
             return;
         }
-        
-        
-        }
+
     }
+
+}

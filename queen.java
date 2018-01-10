@@ -8,32 +8,33 @@ public class queen extends pieces {
     int value = 9;
     Scanner kbd = new Scanner(System.in);
 
-    public queen(int x, int y, int direction, String name, int team) {
-        super(x, y, direction, name, team);
+    public queen(int x, int y, int direction, char name, int team,int value,int AiControl) {
+        super(x, y, direction, name, team,value,AiControl);
     }
 
-    public char[][] move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-        ArrayList<char[][]> movesList = new ArrayList();
-        board = Available_Moves(board, movesList, HumanList, AiList);
-        return board;
+    public ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
+        return Available_Moves(board,HumanList, AiList);
     }
 
-    public char[][] Available_Moves(char[][] board, ArrayList<char[][]> movesList, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
+    public ArrayList<char[][]> Available_Moves(char[][] board, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
         ArrayList<char[][]> moveList = new ArrayList();
-        ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
+       
         int aMove = 1;
-
-        System.out.println("Selct an available move(s): ");
+        if (AiControl == 0) {
+            System.out.println("Selct an available move(s): ");
+        }
         while (inBounds(x + aMove * direction, y)) {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + aMove * direction][y] == ' ') {
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y); //show user the available moves
-                aBoard[x + aMove * direction][y] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y); //show user the available moves
+                }
+                aBoard[x + aMove * direction][y] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * direction, y};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
 
@@ -42,11 +43,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * direction, y, AiList, HumanList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y);
-                            aBoard[x + aMove * direction][y] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y);
+                            }
+                            aBoard[x + aMove * direction][y] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * direction, y};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
 
                         }
@@ -60,13 +63,13 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + aMove * -direction][y] == ' ') {
-
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y); //show user the available moves
-
-                aBoard[x + aMove * -direction][y] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y); //show user the available moves
+                }
+                aBoard[x + aMove * -direction][y] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * -direction, y};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
 
@@ -75,11 +78,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * -direction, y, AiList, HumanList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y);
-                            aBoard[x + aMove * -direction][y] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y);
+                            }
+                            aBoard[x + aMove * -direction][y] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * -direction, y};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
 
                         }
@@ -93,13 +98,13 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x][y + aMove * direction] == ' ') {
-
-                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction)); //show user the available moves
-
-                aBoard[x][y + aMove * direction] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction)); //show user the available moves
+                }
+                aBoard[x][y + aMove * direction] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x, y + aMove * direction};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
             } else {
@@ -107,11 +112,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x, y + aMove * direction, AiList, HumanList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction));
-                            aBoard[x][y + aMove * direction] = 'R';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction));
+                            }
+                            aBoard[x][y + aMove * direction] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x, y + aMove * direction};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
 
                         }
@@ -125,13 +132,14 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x][y + aMove * -direction] == ' ') {
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction)); //show user the available moves
+                }
 
-                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction)); //show user the available moves
-
-                aBoard[x][y + aMove * -direction] = 'Q';
+                aBoard[x][y + aMove * -direction] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x, y + aMove * -direction};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
             } else {
@@ -139,11 +147,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x, y + aMove * -direction, AiList, HumanList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction));
-                            aBoard[x][y + aMove * -direction] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction));
+                            }
+                            aBoard[x][y + aMove * -direction] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x, y + aMove * -direction};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
 
                         }
@@ -157,11 +167,13 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board); //reset the board pieces
             if (board[x + aMove * direction][y - aMove] == ' ') {
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove)); //show user the available moves
-                aBoard[x + aMove * direction][y - aMove] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove)); //show user the available moves
+                }
+                aBoard[x + aMove * direction][y - aMove] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * direction, y - aMove};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++; //increment aMove
             } else {
@@ -169,11 +181,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * direction, y - aMove, HumanList, AiList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove));
-                            aBoard[x + aMove * direction][y - aMove] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y - aMove));
+                            }
+                            aBoard[x + aMove * direction][y - aMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * direction, y - aMove};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
                         }
                     }
@@ -188,12 +202,14 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + aMove * direction][y + aMove] == ' ') {
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + (aMove * direction)) + ":" + (y + aMove)); //show user the available moves
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + (aMove * direction)) + ":" + (y + aMove)); //show user the available moves
+                }
 
-                aBoard[x + aMove * direction][y + aMove] = 'Q';
+                aBoard[x + aMove * direction][y + aMove] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * direction, y + aMove};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
             } else {
@@ -201,11 +217,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * direction, y + aMove, HumanList, AiList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y + aMove));
-                            aBoard[x + aMove * direction][y + aMove] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + (y + aMove));
+                            }
+                            aBoard[x + aMove * direction][y + aMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * direction, y + aMove};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
                         }
                     }
@@ -220,12 +238,13 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + aMove * -direction][y + aMove] == ' ') {
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove)); //show user the available moves
-
-                aBoard[x - aMove * direction][y + aMove] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove)); //show user the available moves
+                }
+                aBoard[x - aMove * direction][y + aMove] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * -direction, y + aMove};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
             } else {
@@ -233,11 +252,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * -direction, y + aMove, HumanList, AiList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove));
-                            aBoard[x + aMove * -direction][y + aMove] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y + aMove));
+                            }
+                            aBoard[x + aMove * -direction][y + aMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * -direction, y + aMove};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
                         }
                     }
@@ -252,11 +273,13 @@ public class queen extends pieces {
             char[][] aBoard = new char[board.length][board.length];
             aBoard = copyBoard(board);
             if (board[x + aMove * -direction][y - aMove] == ' ') {
-                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove)); //show user the available moves
-                aBoard[x + aMove * -direction][y - aMove] = 'Q';
+                if (AiControl == 0) {
+                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove)); //show user the available moves
+                }
+                aBoard[x + aMove * -direction][y - aMove] = this.name;
                 aBoard[x][y] = ' ';
                 int[] XY = {x + aMove * -direction, y - aMove};
-                updatedXY.add(XY);
+                this.updatedXY.add(XY);
                 moveList.add(aBoard);
                 aMove++;
             } else {
@@ -264,11 +287,13 @@ public class queen extends pieces {
                     pieces p = checkPiece(x + aMove * -direction, y - aMove, HumanList, AiList);
                     if (p != null) {
                         if (this.team != p.team) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove));
-                            aBoard[x + aMove * -direction][y - aMove] = 'Q';
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + (y - aMove));
+                            }
+                            aBoard[x + aMove * -direction][y - aMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + aMove * -direction, y - aMove};
-                            updatedXY.add(XY);
+                            this.updatedXY.add(XY);
                             moveList.add(aBoard);
                         }
                     }
@@ -277,36 +302,7 @@ public class queen extends pieces {
             }
         }//Checks for Down-Left
 
-        if (moveList.size() != 0) {
-
-            boolean validChoice = true;
-            while (validChoice) {
-                int choice = kbd.nextInt();
-                if (choice == 0) {
-                    System.out.println("You have deselected this piece");
-                    validChoice = false;
-                } else {
-                    if (choice > 0 && choice <= moveList.size()) {
-                        int[] XY = updatedXY.get(choice - 1);//get piece's new location
-                        validChoice = false;
-                        pieces p = checkPiece(XY[0], XY[1], HumanList, AiList);
-                        if (p != null) {
-                            this.removePiece(p, HumanList, AiList);
-                        }
-
-                        x = XY[0];
-                        y = XY[1];
-
-                        return moveList.get(choice - 1);
-                    } else {
-                        System.out.println("That was an invalid choice,please try again");
-                    }
-                }
-            }
-        } else {
-            System.out.println("No moves available");
-        }//check if there are no available moves
-        return board;
+        return moveList;
     }
 
     public char[][] copyBoard(char[][] someBoard) {
