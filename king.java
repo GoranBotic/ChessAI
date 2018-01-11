@@ -350,7 +350,7 @@ public class king extends pieces {
                                 this.updatedXY.add(XY); //add new location for king
                                 int[] rXY = {x, y + 1};
                                 r.updatedXY.add(rXY); //add new location for rook
-                                
+
                             } else { //else king moves left
                                 if (AiControl == 0) {
                                     System.out.println("(" + (moveList.size() + 1) + ") castle " + (x) + ":" + (y - 2));
@@ -360,9 +360,9 @@ public class king extends pieces {
                                 moveList.add(aBoard);
                                 int[] XY = {x, y - 2};
                                 this.updatedXY.add(XY);
-                                int[] rXY = {x,y-1};
+                                int[] rXY = {x, y - 1};
                                 r.updatedXY.add(rXY);
-                                
+
                             }//move king two spaces towards the rook and rook moves 1 space over king
 
                         }
@@ -394,7 +394,7 @@ public class king extends pieces {
                                 moveList.add(aBoard);
                                 int[] XY = {x, y - 2};
                                 this.updatedXY.add(XY);
-                                int[] rXY = {x,y-1};
+                                int[] rXY = {x, y - 1};
                                 r.updatedXY.add(rXY);
                             }//move king two spaces towards the rook and rook moves 1 space over king
 
@@ -424,31 +424,41 @@ public class king extends pieces {
         int aMove = 1;
 
         if (hasMoved == false) {
-            while (theBoard[x][y + direction * aMove] == ' ' && inBounds(x, y + direction * aMove)) {
-                aMove++;
-            }
-            if (theBoard[x][y + direction * aMove] == 'R') {
-                pieces rook = checkPiece(x, y + direction * aMove, HumanList, AiList);
-                if (rook.hasMoved == false) {
-                    return true;
+            while (inBounds(x, y + direction * aMove)) {
+                if (theBoard[x][y + direction * aMove] == ' ') {
+                    aMove++;
+                } else if (theBoard[x][y + direction * aMove] == 'R') {
+                    pieces rook = checkPiece(x, y + direction * aMove, HumanList, AiList);
+                    if (rook.hasMoved == false) {
+                        return true;
+                    }
+
                 }
+                break;
             }
 
         }
+
         aMove = 1;
 
         if (hasMoved == false) {
-            while (theBoard[x][y + -direction * aMove] == ' ' && inBounds(x, y + -direction * aMove)) {
-                aMove++;
-            }
-                      
-            if (theBoard[x][y + -direction + aMove] == 'R') {
-                pieces rook = checkPiece(x, y + -direction * aMove, HumanList, AiList);
-                if (rook.hasMoved == false) {
-                    return true;
+            while (inBounds(x, y + (-direction * aMove))) {
+                if (theBoard[x][y + (-direction * aMove)] == ' ') {
+                    aMove++;
+                } else {
+                    if (theBoard[x][y + -direction + aMove] == 'R') {
+                        pieces rook = checkPiece(x, y + -direction * aMove, HumanList, AiList);
+                        if (rook.hasMoved == false) {
+                            return true;
+                        }
+                    }
+
                 }
+                break;
             }
+
         }
+
         return false;
     }
 }
