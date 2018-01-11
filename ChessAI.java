@@ -214,8 +214,6 @@ public class ChessAI {
         ArrayList<char[][]> nextMoves = new ArrayList();
         char[][] tempBoard = new char[8][8];
         tempBoard = copyBoard(theBoard);
-//        ArrayList<pieces> tempAiList = copyList(AiList);
-//        ArrayList<pieces> tempHumanList = copyList(HumanList); //temps are used to reset board to last state
 
         boolean removed = false;
         int removedX = 0, removedY = 0;
@@ -290,7 +288,12 @@ public class ChessAI {
                             bestY = p.y;
 
                             if (beta <= alpha) {
+                                if (theBoard[p.x][p.y] != p.name) {
+                                    HumanList.add(i, p);
+                                }//if player piece was killed move ahead
                                 undoMove(prevX, prevY, p, theBoard);
+                                theBoard = copyBoard(tempBoard);
+                                undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
                                 return theBoard;
                             }//prune here
 
@@ -403,16 +406,21 @@ public class ChessAI {
                             bestPiece = HumanList.get(i); //store the best piece
                             bestX = p.x;
                             bestY = p.y;//get the best piece and it's move
-                            if(alpha >= beta){
-                                undoMove(prevX,prevY,p,theBoard);
+                            if (alpha >= beta) {
+                                if (theBoard[p.x][p.y] != p.name) {
+                                    HumanList.add(i, p);
+                                }//if player piece was killed move ahead
+                                undoMove(prevX, prevY, p, theBoard);
+                                theBoard = copyBoard(tempBoard);
+                                undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
                                 return theBoard;
                             }//prune here
                         }
-                        
-                        if(theBoard[p.x][p.y] != p.name){
-                            HumanList.add(i,p);
+
+                        if (theBoard[p.x][p.y] != p.name) {
+                            HumanList.add(i, p);
                         }//if player piece was killed move ahead
-                        
+
                         undoMove(prevX, prevY, p, theBoard); //undo move
                         theBoard = copyBoard(tempBoard);
 
