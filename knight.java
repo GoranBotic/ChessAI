@@ -185,7 +185,7 @@ public class knight extends pieces {
                             if (AiControl == 0) {
                                 System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * -direction) + ":" + (y - horiMove));
                             }
-                            
+
                             aBoard[x + vertMove * -direction][y - horiMove] = this.name;
                             aBoard[x][y] = ' ';
                             int[] XY = {x + vertMove * -direction, y - horiMove};
@@ -311,4 +311,13 @@ public class knight extends pieces {
         return resultBoard;
     }
 
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }

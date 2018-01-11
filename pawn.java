@@ -150,15 +150,17 @@ public class pawn extends pieces {
 
         if (team == 0) {
             if (inBounds(x, y + 1)) {
-                if (aBoard[x][y + 1 ] == 'p') {
+                if (aBoard[x][y + 1] == 'p') {
                     pieces p = checkPiece(x, y + 1, HumanList, AiList);
                     if (((pawn) p).beEnPassant == true) {
-                        System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                        if (AiControl == 0) {
+                            System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                        }
                         aBoard[x][y] = ' '; //remove old piece location
-                        aBoard[x][y+1] = ' '; //remove the opposing pawn
+                        aBoard[x][y + 1] = ' '; //remove the opposing pawn
                         aBoard[p.x - 1][p.y] = name; //update new piece location
                         moveList.add(aBoard);
-                        int[] XY = {p.x-1,p.y};
+                        int[] XY = {p.x - 1, p.y};
                         this.updatedXY.add(XY);
                         killEnPassant = true;
                     }
@@ -172,12 +174,14 @@ public class pawn extends pieces {
                 if (aBoard[x][y - 1] == 'p') {
                     pieces p = checkPiece(x, y - 1, HumanList, AiList);
                     if (((pawn) p).beEnPassant == true) {
-                        System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                        if (AiControl == 0) {
+                            System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                        }
                         aBoard[x][y] = ' ';
-                        aBoard[x][y-1] = ' ';
+                        aBoard[x][y - 1] = ' ';
                         aBoard[p.x - 1][p.y] = name;
                         moveList.add(aBoard);
-                        int[] XY = {p.x-1,p.y};
+                        int[] XY = {p.x - 1, p.y};
                         this.updatedXY.add(XY);
                         killEnPassant = true;
                     }
@@ -190,12 +194,14 @@ public class pawn extends pieces {
                 if (aBoard[x][y + 1] == 'P') {
                     pieces p = checkPiece(x, y + 1, HumanList, AiList);
                     if (((pawn) p).beEnPassant == true) {
-                        System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                        if (AiControl == 0) {
+                            System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                        }
                         aBoard[x][y] = ' ';
-                        aBoard[x][y+1] = ' ';
+                        aBoard[x][y + 1] = ' ';
                         aBoard[p.x + 1][p.y] = name;
                         moveList.add(aBoard);
-                        int[] XY = {p.x+1,p.y};
+                        int[] XY = {p.x + 1, p.y};
                         this.updatedXY.add(XY);
                         killEnPassant = true;
                     }
@@ -209,12 +215,14 @@ public class pawn extends pieces {
                 if (aBoard[x][y - 1] == 'P') {
                     pieces p = checkPiece(x, y - 1, HumanList, AiList);
                     if (((pawn) p).beEnPassant == true) {
-                        System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                        if (AiControl == 0) {
+                            System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                        }
                         aBoard[x][y] = ' ';
-                        aBoard[x][y-1] = ' ';
+                        aBoard[x][y - 1] = ' ';
                         aBoard[p.x + 1][p.y] = name;
                         moveList.add(aBoard);
-                        int[] XY = {p.x+1,p.y};
+                        int[] XY = {p.x + 1, p.y};
                         this.updatedXY.add(XY);
                         killEnPassant = true;
                     }
@@ -251,4 +259,14 @@ public class pawn extends pieces {
         }
         return resultBoard;
     }
+
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }

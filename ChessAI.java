@@ -13,7 +13,6 @@ public class ChessAI {
 
     char[][] board, newBoard;
     int depth = 4; //defines the current depth in game tree
-    final int MaxDepth = 2; //defines the max depth
     boolean playerTurn = true; //determines who's turn it is. 0: AI 1: Human
     boolean play = true; //determines when the game is done
 
@@ -122,7 +121,8 @@ public class ChessAI {
 
                         p.x = XY[0];
                         p.y = XY[1]; //updates pieces new positions
-
+                        p.hasMoved = true;
+                        
                         if (p instanceof pawn) {
                             if (((pawn) p).killEnPassant == true) {
                                 pieces bPiece = p.checkPiece(XY[0] + 1, XY[1], HumanList, AiList);
@@ -214,18 +214,19 @@ public class ChessAI {
         ArrayList<char[][]> nextMoves = new ArrayList();
         char[][] tempBoard = new char[8][8];//use for getting value of next move
         tempBoard = copyBoard(theBoard);//use for getting value of next move
-        ArrayList<pieces> tempAiList = new ArrayList();
-        ArrayList<pieces> tempHumanList = new ArrayList();
+        ArrayList<pieces> tempAiList = copyList(AiList);
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
 
         boolean removed = false;
         int removedX = 0, removedY = 0;
 
-        tempAiList = copyList(AiList);
-        tempHumanList = copyList(HumanList);
         pieces removedPiece = tempHumanList.get(0); //keeps track of any pieces that were removed
 
         int bestX = 0, bestY = 0; //get the best coordinates
         pieces bestPiece = tempAiList.get(0); //get the best piece
+
+        System.out.println();
+        updateBoard(tempBoard);
 
         if (depth == 0) { //if we are at the leaf nodes 
             return theBoard;
@@ -326,20 +327,22 @@ public class ChessAI {
 
     public char[][] max(char[][] theBoard, int depth, int alpha, int beta, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
+        
+        
         ArrayList<char[][]> nextMoves = new ArrayList(); //create a branch for every move available for player
-        ArrayList<pieces> tempHumanList = new ArrayList();
-        ArrayList<pieces> tempAiList = new ArrayList();
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
+        ArrayList<pieces> tempAiList = copyList(AiList);;
 
-        tempHumanList = copyList(HumanList);
-        tempAiList = copyList(AiList);
         boolean removed = false;
         pieces removedPiece = tempAiList.get(0); //keeps track of removed ai piece
         int removedX = 0, removedY = 0;
         char[][] tempBoard = new char[8][8];
         int bestX = 0, bestY = 0;
         pieces bestPiece = tempHumanList.get(0);//place holder
-
         tempBoard = copyBoard(theBoard);//use for getting value of next move
+        
+        System.out.println();
+        updateBoard(tempBoard);
 
         if (depth == 0) {
             return theBoard;
@@ -423,6 +426,7 @@ public class ChessAI {
             }
         }
 
+        
         undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
 
         return theBoard;
@@ -506,7 +510,7 @@ public class ChessAI {
         pieces n2 = new knight(7, 6, -1, 'N', 0, 3, 0);
         HumanPieces.add(n2);
         board[7][7] = 'R';
-        pieces r2 = new rook(0, 7, -1, 'R', 0, 5, 0);
+        pieces r2 = new rook(7, 7, -1, 'R', 0, 5, 0);
         HumanPieces.add(r2);
 
         for (int i = 0; i < board.length; i++) {
@@ -869,7 +873,9 @@ public class ChessAI {
             for (pieces p : HumanList) {
                 if (!(p instanceof king)) {
                     ArrayList<char[][]> movesList = new ArrayList();
+                    p.AiControl = 1;
                     movesList = p.move(theBoard, p.x, p.y, HumanList, AiList);
+                    p.AiControl = 0;
                     if (movesList.size() > 0) {
                         return false;
                     }

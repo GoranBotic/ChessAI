@@ -193,4 +193,14 @@ public class bishop extends pieces {
         return resultBoard;
     }
 
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//       y = newY;
+//    }
+
 }

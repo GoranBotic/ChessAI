@@ -461,4 +461,14 @@ public class king extends pieces {
 
         return false;
     }
+
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }
