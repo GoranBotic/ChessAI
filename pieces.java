@@ -8,8 +8,7 @@ public abstract class pieces {
     char name;
     ArrayList<int[]> updatedXY = new ArrayList(); //stores changed x and y in respect with board states
     boolean hasMoved = false;
-   
-
+    
     public pieces(int x, int y, int direction, char name, int team,int value,int AiControl) {
         this.x = x;
         this.y = y;

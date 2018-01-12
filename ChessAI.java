@@ -223,8 +223,6 @@ public class ChessAI {
         int bestX = 0, bestY = 0; //get the best coordinates
         pieces bestPiece = AiList.get(0); //get the best piece
 
-        System.out.println();
-        updateBoard(theBoard);
 
         if (depth == 0) { //if we are at the leaf nodes 
             return theBoard;
@@ -245,7 +243,7 @@ public class ChessAI {
 
                         int[] XY = p.updatedXY.get(0); //get new piece location 
 
-                        if (tempBoard[XY[0]][XY[1]] != ' ') {
+                        if (theBoard[XY[0]][XY[1]] != ' ') {
 
                             removedPiece = p.checkPiece(XY[0], XY[1], HumanList, AiList);
                             if (removedPiece.team == 0) {
@@ -264,7 +262,6 @@ public class ChessAI {
                         p.updatedXY.remove(0); //removes a from movelist
 
                         ArrayList<int[]> currentList = copyXY(p.updatedXY); //**new stuff
-                        p.updatedXY.clear();
 
                         System.out.println();
                         updateBoard(theBoard);
@@ -273,13 +270,15 @@ public class ChessAI {
 
                         if (beta > alpha) {
                             theBoard = max(theBoard, depth, alpha, beta, HumanList, AiList);
-                            value = EvaluateBoard(theBoard, HumanList, AiList);
-                        }
+                            value = EvaluateBoard(tempBoard, HumanList, AiList);
+                        }//*Changes made*
 
                         p.updatedXY = copyXY(currentList); //**new stuff
 
                         System.out.println();
                         updateBoard(theBoard);
+                        updateListFromBoard(tempBoard, theBoard, HumanList, AiList, 0); //*Change added*
+                        theBoard = copyBoard(tempBoard);
 
                         if (value < beta) {
                             beta = value; //update new beta
@@ -288,22 +287,17 @@ public class ChessAI {
                             bestY = p.y;
 
                             if (beta <= alpha) {
-                                if (theBoard[p.x][p.y] != p.name) {
-                                    HumanList.add(i, p);
+                               /* if (theBoard[p.x][p.y] != p.name) {
+                                    AiList.add(i, p);
                                 }//if player piece was killed move ahead
                                 undoMove(prevX, prevY, p, theBoard);
                                 theBoard = copyBoard(tempBoard);
-                                undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
+                                undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location*/
                                 return theBoard;
                             }//prune here
 
                         }
-
-                        if (theBoard[p.x][p.y] != p.name) {
-                            AiList.add(i, p);
-                        }//this piece was killed a move ahead,add back to list *NEW*
-
-                        theBoard = copyBoard(tempBoard);
+                        
                         undoMove(prevX, prevY, p, theBoard);
 
                         if (removed == true) {
@@ -312,6 +306,7 @@ public class ChessAI {
                             removed = false;
                         }//undo remove
                     }//while moves are empty
+                    p.updatedXY.clear();
                 }
 
             }
@@ -369,15 +364,17 @@ public class ChessAI {
 
                         int[] XY = p.updatedXY.get(0); //get new piece location
 
-                        if (tempBoard[XY[0]][XY[1]] != ' ') {
+                        if (theBoard[XY[0]][XY[1]] != ' ') {
 
                             removedPiece = p.checkPiece(XY[0], XY[1], HumanList, AiList);
+
                             if (removedPiece.team == 1) {
                                 removedX = XY[0];
                                 removedY = XY[1];
                                 p.removePiece(removedPiece, HumanList, AiList);
                                 removed = true;
                             }
+
                         }
                         theBoard = nextMoves.get(0); //update board with player's move only through ASCII
 
@@ -392,11 +389,17 @@ public class ChessAI {
                         int value = 0;
 
                         if (alpha < beta) {
-                            tempBoard = mini(theBoard, depth, alpha, beta, HumanList, AiList);
+                            theBoard = mini(theBoard, depth, alpha, beta, HumanList, AiList);
                             value = EvaluateBoard(theBoard, HumanList, AiList);
                         }
 
                         p.updatedXY = copyXY(currentList);
+
+                        System.out.println();
+                        updateBoard(theBoard);
+                        updateListFromBoard(tempBoard, theBoard, HumanList, AiList, 0); //*Change added*
+                        theBoard = copyBoard(tempBoard);
+                        
 
                         System.out.println();
                         updateBoard(theBoard);
@@ -417,12 +420,11 @@ public class ChessAI {
                             }//prune here
                         }
 
-                        if (theBoard[p.x][p.y] != p.name) {
+                        /*if (theBoard[p.x][p.y] != p.name) {
                             HumanList.add(i, p);
-                        }//if player piece was killed move ahead
-
+                        }//if player piece was killed move ahead*/
                         undoMove(prevX, prevY, p, theBoard); //undo move
-                        theBoard = copyBoard(tempBoard);
+                        //theBoard = copyBoard(tempBoard);
 
                         if (removed == true) {
                             theBoard[removedX][removedY] = removedPiece.name;
@@ -430,18 +432,15 @@ public class ChessAI {
                             removed = false;
                         }//undo remove
                     }//while move is empty
+
                 }//if our local max is less than our local min the evaluate else prune
 
             }//looks through all pieces player can move
 
         } //recursive method
 
-        if (theBoard[bestX][bestY] != ' ') {
-            removedPiece = bestPiece.checkPiece(bestX, bestY, HumanList, AiList);
-            if (removedPiece.team == 1) {
-                bestPiece.removePiece(removedPiece, HumanList, AiList);
-            }
-        }
+
+
 
         undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
 
@@ -584,19 +583,14 @@ public class ChessAI {
         if (flag == 0) {
             for (pieces p : HumanList) {
                 if (theBoard[p.x][p.y] != p.name) {
-                    pieceMoved = p;
-                    pieceMoved.AiControl = 1;
-                    ArrayList<char[][]> possibleMoves = pieceMoved.move(tempOrigBoard, pieceMoved.x, pieceMoved.y, HumanList, AiList);
-                    pieceMoved.AiControl = 0;
-                    for (char[][] moves : possibleMoves) {
-                        if (isEqual(moves, theBoard)) {
-                            int[] XY = pieceMoved.updatedXY.get(0);
-                            pieceMoved.x = XY[0];
-                            pieceMoved.y = XY[1];
-                            pieceMoved.updatedXY.clear();
-                            return;
+                    for (int i = 0; i < theBoard.length; i++) {
+                        for (int j = 0; j < theBoard[i].length; j++) {
+                            if (theBoard[i][j] == p.name) {
+                                p.x = i;
+                                p.y = j;
+                                return;
+                            }
                         }
-
                     }
 
                 }
@@ -607,19 +601,16 @@ public class ChessAI {
             for (pieces p : AiList) {
                 if (theBoard[p.x][p.y] != p.name) {
                     pieceMoved = p;
-                    ArrayList<char[][]> possibleMoves = pieceMoved.move(tempOrigBoard, pieceMoved.x, pieceMoved.y, HumanList, AiList);
 
-                    for (char[][] moves : possibleMoves) {
-                        if (isEqual(moves, theBoard)) {
-                            int[] XY = pieceMoved.updatedXY.get(0);
-                            pieceMoved.x = XY[0];
-                            pieceMoved.y = XY[1];
-                            pieceMoved.updatedXY.clear();
-                            return;
+                    for (int i = 0; i < theBoard.length; i++) {
+                        for (int j = 0; j < theBoard[i].length; i++) {
+                            if (theBoard[i][j] == p.name) {
+                                p.x = i;
+                                p.y = j;
+                                return;
+                            }
                         }
-
-                    }//check if any piece from Ai was moved and get it's possible moves
-
+                    }
                 }
 
             }
