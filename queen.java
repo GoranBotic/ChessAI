@@ -8,18 +8,18 @@ public class queen extends pieces {
     int value = 9;
     Scanner kbd = new Scanner(System.in);
 
-    public queen(int x, int y, int direction, char name, int team,int value,int AiControl) {
-        super(x, y, direction, name, team,value,AiControl);
+    public queen(int x, int y, int direction, char name, int team, int value, int AiControl) {
+        super(x, y, direction, name, team, value, AiControl);
     }
 
     public ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-        return Available_Moves(board,HumanList, AiList);
+        return Available_Moves(board, HumanList, AiList);
     }
 
     public ArrayList<char[][]> Available_Moves(char[][] board, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
         ArrayList<char[][]> moveList = new ArrayList();
-       
+
         int aMove = 1;
         if (AiControl == 0) {
             System.out.println("Selct an available move(s): ");
@@ -315,4 +315,13 @@ public class queen extends pieces {
         return resultBoard;
     }
 
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }

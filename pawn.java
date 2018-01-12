@@ -8,6 +8,9 @@ public class pawn extends pieces {
     int value = 1;
     Scanner kbd = new Scanner(System.in);
     boolean initial = true; //checks if the pawn has moved from initial position
+    boolean promoted = false;
+    boolean beEnPassant = false;
+    boolean killEnPassant = false;
 
     public pawn(int x, int y, int direction, char name, int team, int value, int AiControl) {
         super(x, y, direction, name, team, value, AiControl);
@@ -40,7 +43,8 @@ public class pawn extends pieces {
                 int[] XY = {x + 1 * direction, y};
                 this.updatedXY.add(XY);
                 moveList.add(aBoard);
-            }
+                beEnPassant = false;
+            }//move one space 
 
         }//in bounds check
 
@@ -65,7 +69,32 @@ public class pawn extends pieces {
 
                         initial = false;
 
-                    }
+                        if (team == 0) {
+                            if (inBounds(x + 2 * direction, y + 1)) {
+                                if (board[x + 2 * direction][y + 1] == 'p') {
+                                    beEnPassant = true;
+                                }
+                            }
+                            if (inBounds(x + 2 * direction, y - 1)) {
+                                if (board[x + 2 * direction][y - 1] == 'p') {
+                                    beEnPassant = true;
+                                }
+                            }
+                        }
+
+                        if (team == 1) {
+                            if (inBounds(x + 2 * direction, y + 1)) {
+                                if (board[x + 2 * direction][y + 1] == 'P') {
+                                    beEnPassant = true;
+                                }
+                            }
+                            if (inBounds(x + 2 * direction, y - 1)) {
+                                if (board[x + 2 * direction][y - 1] == 'P') {
+                                    beEnPassant = true;
+                                }
+                            }
+                        }
+                    }//if moved 2 spaces and is adjacent to enemy pawn, enemy pawn can en passant
                 }
             }
 
@@ -74,7 +103,7 @@ public class pawn extends pieces {
         aBoard = new char[board.length][board.length];
         aBoard = copyBoard(board);
 
-        if (inBounds(x + 2 * direction, y - 1)) {
+        if (inBounds(x + 1 * direction, y - 1)) {
             if (board[x + 1 * direction][y - 1] != ' ') {
                 pieces p = checkPiece(x + 1 * direction, y - 1, AiList, HumanList);
                 if (p != null) {
@@ -88,7 +117,7 @@ public class pawn extends pieces {
                         int[] XY = {x + 1 * direction, y - 1};
                         this.updatedXY.add(XY);
                         moveList.add(aBoard);
-
+                        beEnPassant = false;
                     }
                 }
             }//checks to attack left
@@ -97,7 +126,7 @@ public class pawn extends pieces {
         aBoard = new char[board.length][board.length];
         aBoard = copyBoard(board);
 
-        if (inBounds(x + 2 * direction, y + 1)) {
+        if (inBounds(x + 1 * direction, y + 1)) {
             if (board[x + 1 * direction][y + 1] != ' ') {
                 pieces p = checkPiece(x + 1 * direction, y + 1, AiList, HumanList);
                 if (p != null) {
@@ -110,37 +139,119 @@ public class pawn extends pieces {
                         int[] XY = {x + 1 * direction, y + 1};
                         this.updatedXY.add(XY);
                         moveList.add(aBoard);
-
+                        beEnPassant = false;
                     }
                 }
             }//checks to attack right
         }//checks bounds
 
-        if (checkPromotion()) {
-            if (team == 0) {
-                if (AiControl == 1) {
-                    queen q = new queen(x,y,direction,'Q',team,value,AiControl);
-                    HumanList.remove(this);
-                    HumanList.add(q);
-                }else{
-                    
+        aBoard = new char[board.length][board.length];
+        aBoard = copyBoard(board);
+
+        if (team == 0) {
+            if (inBounds(x, y + 1)) {
+                if (aBoard[x][y + 1] == 'p') {
+                    pieces p = checkPiece(x, y + 1, HumanList, AiList);
+                    if (p != null) { //**ADDED
+                        if (((pawn) p).beEnPassant == true) {
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                            }
+                            aBoard[x][y] = ' '; //remove old piece location
+                            aBoard[x][y + 1] = ' '; //remove the opposing pawn
+                            aBoard[p.x - 1][p.y] = name; //update new piece location
+                            moveList.add(aBoard);
+                            int[] XY = {p.x - 1, p.y};
+                            this.updatedXY.add(XY);
+                            killEnPassant = true;
+                        }
+                    }
                 }
             }
-        }
 
+            aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
+
+            if (inBounds(x, y - 1)) {
+                if (aBoard[x][y - 1] == 'p') {
+                    pieces p = checkPiece(x, y - 1, HumanList, AiList);
+                    if (p != null) { //**ADDED
+                        if (((pawn) p).beEnPassant == true) {
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));
+                            }
+                            aBoard[x][y] = ' ';
+                            aBoard[x][y - 1] = ' ';
+                            aBoard[p.x - 1][p.y] = name;
+                            moveList.add(aBoard);
+                            int[] XY = {p.x - 1, p.y};
+                            this.updatedXY.add(XY);
+                            killEnPassant = true;
+                        }
+                    }
+                }
+            }
+        }//add en passant moves for player
+
+        if (team == 1) {
+            if (inBounds(x, y + 1)) {
+                if (aBoard[x][y + 1] == 'P') {
+                    pieces p = checkPiece(x, y + 1, HumanList, AiList);
+                    if (p != null) {
+                        if (((pawn) p).beEnPassant == true) {
+                            if (AiControl == 0) {
+                                System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                            }
+                            aBoard[x][y] = ' ';
+                            aBoard[x][y + 1] = ' ';
+                            aBoard[p.x + 1][p.y] = name;
+                            moveList.add(aBoard);
+                            int[] XY = {p.x + 1, p.y};
+                            this.updatedXY.add(XY);
+                            killEnPassant = true;
+                        }
+                    }
+                }
+            }
+
+            aBoard = new char[board.length][board.length];
+            aBoard = copyBoard(board);
+
+            if (inBounds(x, y - 1)) {
+                if (aBoard[x][y - 1] == 'P') {
+                    pieces p = checkPiece(x, y - 1, HumanList, AiList);
+                    if (p != null) {
+                        if (p instanceof pawn) {
+                            if (((pawn) p).beEnPassant == true) {
+                                if (AiControl == 0) {
+                                    System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x + 1) + ":" + (p.y));
+                                }
+                                aBoard[x][y] = ' ';
+                                aBoard[x][y - 1] = ' ';
+                                aBoard[p.x + 1][p.y] = name;
+                                moveList.add(aBoard);
+                                int[] XY = {p.x + 1, p.y};
+                                this.updatedXY.add(XY);
+                                killEnPassant = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }//add en passant moves for Ai
         return moveList;
     }//
 
     public boolean checkPromotion() {
 
         if (team == 0) {
-            if (x == 7) {
+            if (x == 0) {
                 return true;
             }
         }//if player team
 
         if (team == 1) {
-            if (x == 0) {
+            if (x == 7) {
                 return true;
             }
         }
@@ -158,4 +269,14 @@ public class pawn extends pieces {
         }
         return resultBoard;
     }
+
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }

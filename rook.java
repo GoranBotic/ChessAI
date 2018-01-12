@@ -7,15 +7,15 @@ public class rook extends pieces {
 
     Scanner kbd = new Scanner(System.in);
     boolean hasMoved = false; //this is used for castling
-    
-    public rook(int x, int y, int direction, char name, int team,int value,int AiControl) {
-        super(x, y, direction, name, team,value,AiControl);
+
+    public rook(int x, int y, int direction, char name, int team, int value, int AiControl) {
+        super(x, y, direction, name, team, value, AiControl);
     }
 
     public ArrayList<char[][]> move(char[][] board, int x, int y, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
-        
-        return Available_Moves(board,HumanList, AiList);
-       
+
+        return Available_Moves(board, HumanList, AiList);
+
     }//x and y describes location of piece
 
     public ArrayList<char[][]> Available_Moves(char[][] board, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
@@ -60,8 +60,7 @@ public class rook extends pieces {
                 break;
             }//looks for moves Down
         }
-        
-        
+
         aMove = 1;
         while (inBounds(x + aMove * -direction, y)) {
             char[][] aBoard = new char[board.length][board.length];
@@ -166,7 +165,6 @@ public class rook extends pieces {
             }//looks for moves Right
         }
 
-        
         return moveList;
     }
 
@@ -181,4 +179,13 @@ public class rook extends pieces {
         return resultBoard;
     }
 
+//    @Override
+//    public void changeX(int newX) {
+//        x = newX;
+//    }
+//
+//    @Override
+//    public void changeY(int newY) {
+//        y = newY;
+//    }
 }
