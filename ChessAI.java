@@ -13,7 +13,6 @@ public class ChessAI {
 
     char[][] board, newBoard;
     int depth = 4; //defines the current depth in game tree
-    final int MaxDepth = 2; //defines the max depth
     boolean playerTurn = true; //determines who's turn it is. 0: AI 1: Human
     boolean play = true; //determines when the game is done
 
@@ -37,6 +36,7 @@ public class ChessAI {
                 int choice = kbd.nextInt(); //player picks the piece to move
                 pieces p = HumanPieces.get(choice);//player chooses where the piece wants to move
                 ArrayList<char[][]> movesList = new ArrayList();
+
                 movesList = p.move(board, p.x, p.y, HumanPieces, AiPieces); //board is updated with newest state
                 newBoard = chooseBoard(movesList, p, HumanPieces, AiPieces, board);
 
@@ -52,15 +52,22 @@ public class ChessAI {
                         } else {
                             System.out.println("Ai king is in check");
                         }
-                    } //notfies player that Ai is in check
+                    } else {
+                        if (isStalemate(board, HumanPieces, AiPieces, 0)) {
+                            System.out.println("Stalemate, Game over");
+                            play = false;
+                            break;
+                        }
+                    } //notfies player that Ai is in check else check if Stalemate
                 }
+                playerTurn = false;
             }//the player's turn
 
             if (checkEnd(newBoard, HumanPieces, AiPieces)) {
                 break;
             }//check if player has won
 
-            while (playerTurn == false) {
+            while (playerTurn == false && play == true) {
 
                 newBoard = mini(newBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, HumanPieces, AiPieces);//alpha = best local max, beta = best local min
                 updateListFromBoard(newBoard, board, HumanPieces, AiPieces);
@@ -76,7 +83,13 @@ public class ChessAI {
                         System.out.println("Player king is in check");
                     }
 
-                } //notfies player is in check
+                } else {
+                    if (isStalemate(board, HumanPieces, AiPieces, 1)) {
+                        System.out.println("Stalemate, Game Over");
+                        play = false;
+                    }
+                } //notfies player is in check 
+
             }//While Ai's turn 
 
             if (checkEnd(newBoard, HumanPieces, AiPieces)) {
@@ -87,6 +100,7 @@ public class ChessAI {
     }
 
     public char[][] chooseBoard(ArrayList<char[][]> moveList, pieces p, ArrayList<pieces> HumanList, ArrayList<pieces> AiList, char[][] board) {
+
         if (!moveList.isEmpty()) {
 
             boolean validChoice = true; //this will flag if user picked an integer available from the list
@@ -97,7 +111,7 @@ public class ChessAI {
                     validChoice = false; //this breaks out of loop and nothing happens to board
                 } else {
                     if (choice > 0 && choice <= moveList.size()) {
-                        
+
                         int[] XY = p.updatedXY.get(choice - 1);//get piece's new location
                         validChoice = false;
                         pieces aPiece = p.checkPiece(XY[0], XY[1], HumanList, AiList);
@@ -107,12 +121,21 @@ public class ChessAI {
 
                         p.x = XY[0];
                         p.y = XY[1]; //updates pieces new positions
+                        p.hasMoved = true;
                         
-                        if(p instanceof king){
-                            for(pieces r:HumanList){
-                                if(r.updatedXY.size() > 0){
-                                    
-                                    int[] rXY = r.updatedXY.get(0); 
+                        if (p instanceof pawn) {
+                            if (((pawn) p).killEnPassant == true) {
+                                pieces bPiece = p.checkPiece(XY[0] + 1, XY[1], HumanList, AiList);
+                                p.removePiece(bPiece, HumanList, AiList);
+                                ((pawn) p).killEnPassant = false;
+                            }
+                        }//if move made was en passant kill pawn below piece moving
+
+                        if (p instanceof king) {
+                            for (pieces r : HumanList) {
+                                if (r.updatedXY.size() > 0) {
+
+                                    int[] rXY = r.updatedXY.get(0);
                                     r.x = rXY[0];
                                     r.y = rXY[1];
                                     board[r.x][r.y] = r.name;
@@ -121,7 +144,53 @@ public class ChessAI {
                                 }
                             }
                         }//checks if the king is castling 
-                        
+
+                        if (p instanceof pawn) {
+
+                            if (((pawn) p).checkPromotion()) {
+
+                                if (p.team == 0) {
+                                    board[p.x + 1][p.y] = ' ';
+                                    System.out.println("Select piece to promote pawn with ");
+                                    System.out.println("0: Queen");
+                                    System.out.println("1: Rook");
+                                    System.out.println("2: Knight");
+                                    System.out.println("3: Bishop");
+                                    int aChoice = kbd.nextInt();
+                                    HumanList.remove(this);
+
+                                    switch (aChoice) {
+
+                                        case 0:
+                                            queen q = new queen(p.x, p.y, p.direction, 'Q', p.team, p.value, p.AiControl);
+                                            HumanList.add(q);
+                                            board[q.x][q.y] = 'Q';
+                                            break;
+
+                                        case 1:
+                                            rook r = new rook(p.x, p.y, p.direction, 'R', p.team, p.value, p.AiControl);
+                                            HumanList.add(r);
+                                            board[r.x][r.y] = 'R';
+                                            break;
+
+                                        case 2:
+                                            knight n = new knight(p.x, p.y, p.direction, 'N', p.team, p.value, p.AiControl);
+                                            HumanList.add(n);
+                                            board[n.x][n.y] = 'N';
+                                            break;
+
+                                        case 3:
+                                            bishop b = new bishop(p.x, p.y, p.direction, 'B', p.team, p.value, p.AiControl);
+                                            HumanList.add(b);
+                                            board[b.x][b.y] = 'B';
+                                            break;
+                                    }
+
+                                }
+
+                            }
+                        }
+
                         p.updatedXY.clear();//clears available moves
 
                         return moveList.get(choice - 1);
@@ -145,18 +214,19 @@ public class ChessAI {
         ArrayList<char[][]> nextMoves = new ArrayList();
         char[][] tempBoard = new char[8][8];//use for getting value of next move
         tempBoard = copyBoard(theBoard);//use for getting value of next move
-        ArrayList<pieces> tempAiList = new ArrayList();
-        ArrayList<pieces> tempHumanList = new ArrayList();
+        ArrayList<pieces> tempAiList = copyList(AiList);
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
 
         boolean removed = false;
         int removedX = 0, removedY = 0;
 
-        tempAiList = copyList(AiList);
-        tempHumanList = copyList(HumanList);
         pieces removedPiece = tempHumanList.get(0); //keeps track of any pieces that were removed
 
         int bestX = 0, bestY = 0; //get the best coordinates
         pieces bestPiece = tempAiList.get(0); //get the best piece
+
+//        System.out.println();
+//        updateBoard(tempBoard);
 
         if (depth == 0) { //if we are at the leaf nodes 
             return theBoard;
@@ -257,20 +327,22 @@ public class ChessAI {
 
     public char[][] max(char[][] theBoard, int depth, int alpha, int beta, ArrayList<pieces> HumanList, ArrayList<pieces> AiList) {
 
+        
+        
         ArrayList<char[][]> nextMoves = new ArrayList(); //create a branch for every move available for player
-        ArrayList<pieces> tempHumanList = new ArrayList();
-        ArrayList<pieces> tempAiList = new ArrayList();
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
+        ArrayList<pieces> tempAiList = copyList(AiList);;
 
-        tempHumanList = copyList(HumanList);
-        tempAiList = copyList(AiList);
         boolean removed = false;
         pieces removedPiece = tempAiList.get(0); //keeps track of removed ai piece
         int removedX = 0, removedY = 0;
         char[][] tempBoard = new char[8][8];
         int bestX = 0, bestY = 0;
         pieces bestPiece = tempHumanList.get(0);//place holder
-
         tempBoard = copyBoard(theBoard);//use for getting value of next move
+        
+//        System.out.println();
+//        updateBoard(tempBoard);
 
         if (depth == 0) {
             return theBoard;
@@ -354,6 +426,7 @@ public class ChessAI {
             }
         }
 
+        
         undoMove(bestX, bestY, bestPiece, theBoard);//move the best piece to it's best location
 
         return theBoard;
@@ -377,9 +450,9 @@ public class ChessAI {
     public void initBoard(ArrayList<pieces> HumanPieces, ArrayList<pieces> AiPieces) {
 
         for (int i = 0; i < board.length; i++) {
-            board[1][i] = ' ';
-            //pieces p = new pawn(1, i, 1, 'p', 1, 1, 1);
-            //AiPieces.add(p);
+            board[1][i] = 'p';
+            pieces p = new pawn(1, i, 1, 'p', 1, 1, 1);
+            AiPieces.add(p);
         }
 
         board[0][0] = 'r';
@@ -413,10 +486,11 @@ public class ChessAI {
             board[4][j] = ' ';
             board[5][j] = ' ';
         }
+
         board[7][0] = 'R';
         pieces r1 = new rook(7, 0, -1, 'R', 0, 5, 0);
         HumanPieces.add(r1);
-        board[7][1] = 'K';
+        board[7][1] = 'N';
         pieces n1 = new knight(7, 1, -1, 'N', 0, 3, 0);
         HumanPieces.add(n1);
         board[7][2] = 'B';
@@ -428,20 +502,21 @@ public class ChessAI {
         board[7][4] = 'Q';
         pieces q = new queen(7, 4, -1, 'Q', 0, 9, 0);
         HumanPieces.add(q);
+
         board[7][5] = 'B';
         pieces b2 = new bishop(7, 5, -1, 'B', 0, 3, 0);
         HumanPieces.add(b2);
-        board[7][6] = 'K';
+        board[7][6] = 'N';
         pieces n2 = new knight(7, 6, -1, 'N', 0, 3, 0);
         HumanPieces.add(n2);
-        board[7][7] = 'R'; 
-        pieces r2 = new rook(0, 7, -1, 'R', 0, 5, 0);
+        board[7][7] = 'R';
+        pieces r2 = new rook(7, 7, -1, 'R', 0, 5, 0);
         HumanPieces.add(r2);
 
         for (int i = 0; i < board.length; i++) {
             board[6][i] = 'P';
-            pieces p = new pawn(6, i, -1, 'P', 0, 1, 0);
-            HumanPieces.add(p);
+            pieces z = new pawn(6, i, -1, 'P', 0, 1, 0);
+            HumanPieces.add(z);
         }
 
         for (int i = 0; i < board.length; i++) {
@@ -662,7 +737,6 @@ public class ChessAI {
                 for (int i = 0; i < movesList.size(); i++) {
                     int[] XY = p.updatedXY.get(i);
                     if (tempBoard[XY[0]][XY[1]] == 'K') {
-
                         return true;
                     }
                 }
@@ -699,8 +773,7 @@ public class ChessAI {
                         } else {
                             return false;
                         }
-                            
-                        
+
                     }
                 }
             }
@@ -733,6 +806,96 @@ public class ChessAI {
 
         return true;
     }//if it's the Ai is in check, find a board that will make the king safe
+
+    public boolean isStalemate(char[][] theBoard, ArrayList<pieces> HumanList, ArrayList<pieces> AiList, int flag) {
+
+        char[][] tempBoard = copyBoard(theBoard);
+        ArrayList<pieces> tempHumanList = copyList(HumanList);
+        ArrayList<pieces> tempAiList = copyList(AiList);
+
+        if (flag == 0) {
+            if (onlyKingMoves(tempBoard, tempHumanList, tempAiList, 1)) {
+                if (!isCheck(tempBoard, tempHumanList, tempAiList, 0)) {
+                    for (pieces p : tempAiList) {
+                        int prevX = p.x;
+                        int prevY = p.y;
+                        if (p.name == 'k') {
+                            ArrayList<char[][]> moveList = new ArrayList();
+                            moveList = p.move(tempBoard, p.x, p.y, tempHumanList, tempAiList);
+                            for (int i = 0; i < moveList.size(); i++) {
+                                tempBoard = moveList.get(i);
+                                int[] XY = p.updatedXY.get(i);
+                                p.x = XY[0];
+                                p.y = XY[1];
+                                if (!isCheck(tempBoard, tempHumanList, tempAiList, flag)) {
+                                    return false;
+                                }
+                                undoMove(prevX, prevY, p, tempBoard);
+                            }//moves the king to every available move, if it finds a move that is safe, return false
+                            return true;
+                        }
+                    }
+                }//checks if the king is not in check
+            }//checks if king is the only piece that can move
+        }
+
+        if (flag == 1) {
+            if (onlyKingMoves(tempBoard, tempHumanList, tempAiList, 0)) {
+                if (!isCheck(tempBoard, tempHumanList, tempAiList, 1)) {
+                    for (pieces p : tempHumanList) {
+                        int prevX = p.x;
+                        int prevY = p.y;
+                        if (p.name == 'K') {
+                            ArrayList<char[][]> moveList = new ArrayList();
+                            moveList = p.move(tempBoard, p.x, p.y, tempHumanList, tempAiList);
+                            for (int i = 0; i < moveList.size(); i++) {
+                                tempBoard = moveList.get(i);
+                                int[] XY = p.updatedXY.get(i);
+                                p.x = XY[0];
+                                p.y = XY[1];
+                                if (!isCheck(tempBoard, tempHumanList, tempAiList, flag)) {
+                                    return false;
+                                }
+                                undoMove(prevX, prevY, p, tempBoard);
+                            }//moves the king to every available move, if it finds a move that is safe, return false
+                            return true;
+                        }
+                    }
+                }//checks if the king is not in check
+            }//checks if king is the only piece that can move
+        }
+        return false;
+    }
+
+    public boolean onlyKingMoves(char[][] theBoard, ArrayList<pieces> HumanList, ArrayList<pieces> AiList, int flag) {
+
+        if (flag == 0) {
+            for (pieces p : HumanList) {
+                if (!(p instanceof king)) {
+                    ArrayList<char[][]> movesList = new ArrayList();
+                    p.AiControl = 1;
+                    movesList = p.move(theBoard, p.x, p.y, HumanList, AiList);
+                    p.AiControl = 0;
+                    if (movesList.size() > 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        if (flag == 1) {
+            for (pieces p : AiList) {
+                if (!(p instanceof king)) {
+                    ArrayList<char[][]> movesList = new ArrayList();
+                    movesList = p.move(theBoard, p.x, p.y, HumanList, AiList);
+                    if (movesList.size() > 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }//return true only if the king can move
 
     public static void main(String[] args) {
         ChessAI c = new ChessAI();

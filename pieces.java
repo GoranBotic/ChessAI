@@ -66,5 +66,10 @@ public abstract class pieces {
         }
 
     }
+    
+    //public abstract void changeX(int newX);
+    
+    //public abstract void changeY(int newY);
+        
 
 }
