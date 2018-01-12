@@ -47,7 +47,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * direction) + ":" + y);
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * direction) + ":" + y);
                             }
 
                             aBoard[x + 1 * direction][y] = this.name;
@@ -85,7 +85,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * -direction) + ":" + y);
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * -direction) + ":" + y);
                             }
 
                             aBoard[x + 1 * -direction][y] = this.name;
@@ -123,7 +123,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + 1 * direction));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + x + ":" + (y + 1 * direction));
                             }
 
                             aBoard[x][y + 1 * direction] = this.name;
@@ -161,7 +161,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + 1 * -direction));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + x + ":" + (y + 1 * -direction));
                             }
 
                             aBoard[x][y + 1 * -direction] = this.name;
@@ -199,7 +199,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * direction) + ":" + (y - 1));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * direction) + ":" + (y - 1));
                             }
 
                             aBoard[x + 1 * direction][y - 1] = this.name;
@@ -236,7 +236,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * direction) + ":" + (y + 1));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * direction) + ":" + (y + 1));
                             }
 
                             aBoard[x + 1 * direction][y + 1] = this.name;
@@ -273,7 +273,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * -direction) + ":" + (y + 1));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * -direction) + ":" + (y + 1));
                             }
 
                             aBoard[x + 1 * -direction][y + 1] = this.name;
@@ -310,7 +310,7 @@ public class king extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + 1 * -direction) + ":" + (y - 1));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + 1 * -direction) + ":" + (y - 1));
                             }
 
                             aBoard[x + 1 * -direction][y - 1] = this.name;
@@ -462,13 +462,4 @@ public class king extends pieces {
         return false;
     }
 
-//    @Override
-//    public void changeX(int newX) {
-//        x = newX;
-//    }
-//
-//    @Override
-//    public void changeY(int newY) {
-//        y = newY;
-//    }
 }

@@ -10,6 +10,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ChessAI {
+    
+    /*
+    Game Instructions:
+        - Player will be prompt on console to select a piece
+        - Player will be given a list of moves for that piece 
+        - moves are selected from 1-n moves
+        - Player can select 0 if player wants to deselect a piece
+        
+    ENJOY!
+    */
 
     char[][] board, newBoard;
     int depth = 4; //defines the current depth in game tree

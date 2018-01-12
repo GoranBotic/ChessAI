@@ -109,7 +109,7 @@ public class pawn extends pieces {
                 if (p != null) {
                     if (this.team != p.team) {
                         if (AiControl == 0) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + (1 * direction)) + ":" + (y - 1));
+                            System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + (1 * direction)) + ":" + (y - 1));
                         }
 
                         aBoard[x + 1 * direction][y - 1] = this.name;
@@ -132,7 +132,7 @@ public class pawn extends pieces {
                 if (p != null) {
                     if (this.team != p.team) {
                         if (AiControl == 0) {
-                            System.out.println("(" + (moveList.size() + 1) + ") " + (x + (1 * direction)) + ":" + (y + 1));
+                            System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + (1 * direction)) + ":" + (y + 1));
                         }
                         aBoard[x + 1 * direction][y + 1] = this.name;
                         aBoard[x][y] = ' ';
@@ -175,7 +175,7 @@ public class pawn extends pieces {
             if (inBounds(x, y - 1)) {
                 if (aBoard[x][y - 1] == 'p') {
                     pieces p = checkPiece(x, y - 1, HumanList, AiList);
-                    if (p != null) { //**ADDED
+                    if (p != null) { 
                         if (((pawn) p).beEnPassant == true) {
                             if (AiControl == 0) {
                                 System.out.println("(" + (moveList.size() + 1) + ") En Passant " + (p.x - 1) + ":" + (p.y));

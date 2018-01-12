@@ -46,7 +46,7 @@ public class rook extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * direction) + ":" + y);
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + aMove * direction) + ":" + y);
                             }
                             aBoard[x + aMove * direction][y] = this.name;
                             aBoard[x][y] = ' ';
@@ -82,7 +82,7 @@ public class rook extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + aMove * -direction) + ":" + y);
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + aMove * -direction) + ":" + y);
                             }
                             aBoard[x + aMove * -direction][y] = this.name;
                             aBoard[x][y] = ' ';
@@ -116,7 +116,7 @@ public class rook extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * direction));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + x + ":" + (y + aMove * direction));
                             }
                             aBoard[x][y + aMove * direction] = this.name;
                             aBoard[x][y] = ' ';
@@ -150,7 +150,7 @@ public class rook extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + x + ":" + (y + aMove * -direction));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + x + ":" + (y + aMove * -direction));
                             }
                             aBoard[x][y + aMove * -direction] = this.name;
                             aBoard[x][y] = ' ';
@@ -179,13 +179,4 @@ public class rook extends pieces {
         return resultBoard;
     }
 
-//    @Override
-//    public void changeX(int newX) {
-//        x = newX;
-//    }
-//
-//    @Override
-//    public void changeY(int newY) {
-//        y = newY;
-//    }
 }

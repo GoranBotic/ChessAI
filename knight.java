@@ -49,7 +49,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * direction) + ":" + (y + horiMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + vertMove * direction) + ":" + (y + horiMove));
                             }
                             aBoard[x + vertMove * direction][y + horiMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -82,7 +82,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * direction) + ":" + (y + vertMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + horiMove * direction) + ":" + (y + vertMove));
                             }
                             aBoard[x + horiMove * direction][y + vertMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -116,7 +116,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * direction) + ":" + (y - horiMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + vertMove * direction) + ":" + (y - horiMove));
                             }
                             aBoard[x + vertMove * direction][y - horiMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -136,7 +136,7 @@ public class knight extends pieces {
         if (inBounds(x + horiMove * direction, y - vertMove)) {
             if (board[x + horiMove * direction][y - vertMove] == ' ') {
                 if (AiControl == 0) {
-                    System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * direction) + ":" + (y - vertMove)); //show user the available moves
+                    System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + horiMove * direction) + ":" + (y - vertMove)); //show user the available moves
                 }
                 aBoard[x + horiMove * direction][y - vertMove] = this.name;
                 aBoard[x][y] = ' ';
@@ -149,7 +149,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * direction) + ":" + (y - vertMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + horiMove * direction) + ":" + (y - vertMove));
                             }
                             aBoard[x + horiMove * direction][y - vertMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -183,7 +183,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * -direction) + ":" + (y - horiMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + vertMove * -direction) + ":" + (y - horiMove));
                             }
 
                             aBoard[x + vertMove * -direction][y - horiMove] = this.name;
@@ -217,7 +217,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * -direction) + ":" + (y - vertMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + horiMove * -direction) + ":" + (y - vertMove));
                             }
                             aBoard[x + horiMove * -direction][y - vertMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -251,7 +251,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + vertMove * -direction) + ":" + (y + horiMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + vertMove * -direction) + ":" + (y + horiMove));
                             }
                             aBoard[x + vertMove * -direction][y + horiMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -284,7 +284,7 @@ public class knight extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + horiMove * -direction) + ":" + (y + vertMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + horiMove * -direction) + ":" + (y + vertMove));
                             }
                             aBoard[x + horiMove * -direction][y + vertMove] = this.name;
                             aBoard[x][y] = ' ';
@@ -298,7 +298,7 @@ public class knight extends pieces {
         }
 
         return moveList;
-    }//
+    }
 
     public char[][] copyBoard(char[][] someBoard) {
         char[][] resultBoard = new char[someBoard.length][someBoard.length];
@@ -311,13 +311,4 @@ public class knight extends pieces {
         return resultBoard;
     }
 
-//    @Override
-//    public void changeX(int newX) {
-//        x = newX;
-//    }
-//
-//    @Override
-//    public void changeY(int newY) {
-//        y = newY;
-//    }
 }

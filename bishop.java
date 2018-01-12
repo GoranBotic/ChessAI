@@ -47,7 +47,7 @@ public class bishop extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * direction) + ":" + (y - diagMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + diagMove * direction) + ":" + (y - diagMove));
                             }
 
                             aBoard[x + diagMove * direction][y - diagMove] = this.name;
@@ -86,7 +86,7 @@ public class bishop extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * direction) + ":" + (y + diagMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + diagMove * direction) + ":" + (y + diagMove));
                             }
                             aBoard[x + diagMove * direction][y + diagMove] = this.name;
 
@@ -124,7 +124,7 @@ public class bishop extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y + diagMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + diagMove * -direction) + ":" + (y + diagMove));
                             }
 
                             aBoard[x + diagMove * -direction][y + diagMove] = this.name;
@@ -163,7 +163,7 @@ public class bishop extends pieces {
                     if (p != null) {
                         if (this.team != p.team) {
                             if (AiControl == 0) {
-                                System.out.println("(" + (moveList.size() + 1) + ") " + (x + diagMove * -direction) + ":" + (y - diagMove));
+                                System.out.println("(" + (moveList.size() + 1) + ") Attack" + (x + diagMove * -direction) + ":" + (y - diagMove));
                             }
 
                             aBoard[x + diagMove * -direction][y - diagMove] = this.name;
@@ -192,15 +192,5 @@ public class bishop extends pieces {
         }
         return resultBoard;
     }
-
-//    @Override
-//    public void changeX(int newX) {
-//        x = newX;
-//    }
-//
-//    @Override
-//    public void changeY(int newY) {
-//       y = newY;
-//    }
 
 }
